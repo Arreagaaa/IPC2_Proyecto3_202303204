@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tecnologías Chapinas - Frontend</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+      <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+        <h1 class="text-3xl font-bold text-blue-600 mb-6">Enviar XML de Configuraciones</h1>
+        <form action="/upload/" method="post" enctype="multipart/form-data" class="space-y-4">
+          <div>
+            <label for="xmlfile" class="block text-sm font-medium text-gray-700 mb-2">
+              Seleccione archivo XML
+            </label>
+            <input 
+              type="file" 
+              name="xmlfile" 
+              id="xmlfile"
+              accept=".xml" 
+              class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            />
+          </div>
+          <button 
+            type="submit"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-200"
+          >
+            Enviar
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
