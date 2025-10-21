@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<listadoConsumos>
+    <consumo nitCliente="110339001-K" idInstancia="1">
+        <tiempo>2.5</tiempo>
+        <fechaHora>Guatemala, 15/01/2025 14:30</fechaHora>
+    </consumo>
+    <consumo nitCliente="110339001-K" idInstancia="1">
+        <tiempo>3.75</tiempo>
+        <fechaHora>en la ciudad de Guatemala, 16/01/2025 09:15 se registra el consumo</fechaHora>
+    </consumo>
+    <consumo nitCliente="34300-4" idInstancia="2">
+        <tiempo>1.0</tiempo>
+        <fechaHora>17/01/2025 18:00</fechaHora>
+    </consumo>
+</listadoConsumos>

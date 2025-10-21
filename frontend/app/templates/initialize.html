@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inicializar Sistema</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Encabezado -->
+    <nav class="bg-blue-600 text-white shadow-lg">
+      <div class="container mx-auto px-4 py-4">
+        <h1 class="text-2xl font-bold">Tecnologías Chapinas S.A.</h1>
+        <p class="text-blue-100 text-sm">
+          Sistema de Facturación de Infraestructura en la Nube
+        </p>
+      </div>
+    </nav>
+
+    <!-- Contenido -->
+    <div class="container mx-auto px-4 py-8">
+      <div class="max-w-2xl mx-auto">
+        <!-- Botón Regresar -->
+        <div class="mb-4">
+          <a
+            href="/"
+            class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
+          >
+            <svg
+              class="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              ></path>
+            </svg>
+            Regresar al inicio
+          </a>
+        </div>
+
+        <!-- Contenido -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-2xl font-bold text-red-600 mb-6">
+            Inicializar Sistema
+          </h2>
+
+          <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg
+                  class="h-5 w-5 text-red-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm text-red-700">
+                  <strong>Advertencia:</strong> Esta acción eliminará todos los
+                  datos del sistema de forma permanente.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <h3 class="font-semibold text-gray-800 mb-3">
+              Se eliminarán los siguientes datos:
+            </h3>
+            <ul class="list-disc list-inside text-gray-600 space-y-2 ml-4">
+              <li>Todos los recursos registrados</li>
+              <li>Todas las categorías y configuraciones</li>
+              <li>Todos los clientes e instancias</li>
+              <li>Todos los consumos registrados</li>
+            </ul>
+          </div>
+
+          <form
+            method="post"
+            onsubmit="return confirm('¿Está seguro de que desea inicializar el sistema? Esta acción no se puede deshacer.');"
+          >
+            {% csrf_token %}
+            <button
+              type="submit"
+              class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-md transition duration-200 flex items-center justify-center"
+            >
+              <svg
+                class="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                ></path>
+              </svg>
+              Inicializar Sistema
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

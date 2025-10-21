@@ -165,3 +165,105 @@ class XMLStorage:
             'instances': instances_count,
             'consumptions': consumptions_count
         }
+
+    def clear_all(self):
+        """
+        Limpia todos los datos de la base de datos
+        Reinicia la estructura XML a su estado inicial
+        """
+        root = ET.Element('database')
+        ET.SubElement(root, 'resources')
+        ET.SubElement(root, 'categories')
+        ET.SubElement(root, 'clients')
+        ET.SubElement(root, 'consumptions')
+        tree = ET.ElementTree(root)
+        tree.write(self.db_path, encoding='utf-8', xml_declaration=True)
+
+    def get_all_data(self) -> Dict:
+        """
+        Obtiene todos los datos almacenados en formato estructurado
+        Retorna diccionario con recursos, categorías, clientes, consumos
+        """
+        tree = self.load_tree()
+        root = tree.getroot()
+
+        # Obtener recursos
+        resources = []
+        for res_node in root.findall('.//resources/resource'):
+            resources.append({
+                'id': res_node.get('id'),
+                'name': res_node.find('name').text if res_node.find('name') is not None else '',
+                'abbreviation': res_node.find('abbreviation').text if res_node.find('abbreviation') is not None else '',
+                'metric': res_node.find('metric').text if res_node.find('metric') is not None else '',
+                'type': res_node.find('type').text if res_node.find('type') is not None else '',
+                'value_per_hour': res_node.find('value_per_hour').text if res_node.find('value_per_hour') is not None else ''
+            })
+
+        # Obtener categorías con configuraciones
+        categories = []
+        for cat_node in root.findall('.//categories/category'):
+            configurations = []
+            for config_node in cat_node.findall('.//configurations/configuration'):
+                config_resources = []
+                for res_node in config_node.findall('.//resources/resource'):
+                    config_resources.append({
+                        'resource_id': res_node.get('id'),
+                        'quantity': res_node.text
+                    })
+
+                configurations.append({
+                    'id': config_node.get('id'),
+                    'name': config_node.find('name').text if config_node.find('name') is not None else '',
+                    'description': config_node.find('description').text if config_node.find('description') is not None else '',
+                    'resources': config_resources
+                })
+
+            categories.append({
+                'id': cat_node.get('id'),
+                'name': cat_node.find('name').text if cat_node.find('name') is not None else '',
+                'description': cat_node.find('description').text if cat_node.find('description') is not None else '',
+                'workload': cat_node.find('workload').text if cat_node.find('workload') is not None else '',
+                'configurations': configurations
+            })
+
+        # Obtener clientes con instancias
+        clients = []
+        for client_node in root.findall('.//clients/client'):
+            instances = []
+            for inst_node in client_node.findall('.//instances/instance'):
+                instances.append({
+                    'id': inst_node.get('id'),
+                    'configuration_id': inst_node.find('configuration_id').text if inst_node.find('configuration_id') is not None else '',
+                    'name': inst_node.find('name').text if inst_node.find('name') is not None else '',
+                    'start_date': inst_node.find('start_date').text if inst_node.find('start_date') is not None else '',
+                    'status': inst_node.find('status').text if inst_node.find('status') is not None else '',
+                    'end_date': inst_node.find('end_date').text if inst_node.find('end_date') is not None else ''
+                })
+
+            clients.append({
+                'nit': client_node.get('nit'),
+                'name': client_node.find('name').text if client_node.find('name') is not None else '',
+                'username': client_node.find('username').text if client_node.find('username') is not None else '',
+                'password': client_node.find('password').text if client_node.find('password') is not None else '',
+                'address': client_node.find('address').text if client_node.find('address') is not None else '',
+                'email': client_node.find('email').text if client_node.find('email') is not None else '',
+                'instances': instances
+            })
+
+        # Obtener consumos
+        consumptions = []
+        for cons_node in root.findall('.//consumptions/consumption'):
+            consumptions.append({
+                'nit': cons_node.get('nit'),
+                'instance_id': cons_node.get('instance_id'),
+                'time_hours': cons_node.find('time_hours').text if cons_node.find('time_hours') is not None else '',
+                'date_time': cons_node.find('date_time').text if cons_node.find('date_time') is not None else ''
+            })
+
+        return {
+            'resources': resources,
+            'categories': categories,
+            'clients': clients,
+            'consumptions': consumptions,
+            'summary': self.get_summary()
+        }
