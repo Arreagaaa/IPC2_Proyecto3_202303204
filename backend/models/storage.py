@@ -18,6 +18,7 @@ class XMLStorage:
             ET.SubElement(root, 'categories')
             ET.SubElement(root, 'clients')
             ET.SubElement(root, 'consumptions')
+            ET.SubElement(root, 'invoices')
             tree = ET.ElementTree(root)
             tree.write(self.db_path, encoding='utf-8', xml_declaration=True)
 
@@ -176,6 +177,7 @@ class XMLStorage:
         ET.SubElement(root, 'categories')
         ET.SubElement(root, 'clients')
         ET.SubElement(root, 'consumptions')
+        ET.SubElement(root, 'invoices')
         tree = ET.ElementTree(root)
         tree.write(self.db_path, encoding='utf-8', xml_declaration=True)
 
@@ -266,4 +268,192 @@ class XMLStorage:
             'clients': clients,
             'consumptions': consumptions,
             'summary': self.get_summary()
+        }
+
+    def add_invoice(self, invoice_number: str, client_nit: str, issue_date: str, total_amount: float, consumption_ids: List[str]):
+        """
+        Agrega una factura a la base de datos
+        Marca los consumos como facturados
+        """
+        tree = self.load_tree()
+        root = tree.getroot()
+        invoices_node = root.find('invoices')
+        if invoices_node is None:
+            invoices_node = ET.SubElement(root, 'invoices')
+
+        # Crear nodo de factura
+        invoice_node = ET.SubElement(invoices_node, 'invoice')
+        invoice_node.set('number', invoice_number)
+        invoice_node.set('nit', client_nit)
+        ET.SubElement(invoice_node, 'issue_date').text = issue_date
+        ET.SubElement(invoice_node, 'total_amount').text = str(total_amount)
+
+        # Agregar IDs de consumos
+        consumptions_node = ET.SubElement(invoice_node, 'consumptions')
+        for cons_id in consumption_ids:
+            cons_ref = ET.SubElement(consumptions_node, 'consumption_ref')
+            cons_ref.text = cons_id
+
+        # Marcar consumos como facturados
+        consumptions_node = root.find('consumptions')
+        if consumptions_node is not None:
+            for cons_id in consumption_ids:
+                # Buscar el consumo por índice o algún identificador único
+                # En este caso, usamos la posición como ID
+                consumptions = list(consumptions_node.findall('consumption'))
+                try:
+                    idx = int(cons_id)
+                    if idx < len(consumptions):
+                        consumptions[idx].set('invoiced', 'true')
+                except (ValueError, IndexError):
+                    pass
+
+        self.save_tree(tree)
+
+    def get_unbilled_consumptions(self):
+        """
+        Obtiene todos los consumos que no han sido facturados
+        """
+        tree = self.load_tree()
+        root = tree.getroot()
+        
+        consumptions = []
+        for idx, cons_node in enumerate(root.findall('.//consumptions/consumption')):
+            if cons_node.get('invoiced') != 'true':
+                consumptions.append({
+                    'id': str(idx),
+                    'nit': cons_node.get('nit'),
+                    'instance_id': cons_node.get('instance_id'),
+                    'time_hours': cons_node.find('time_hours').text if cons_node.find('time_hours') is not None else '',
+                    'date_time': cons_node.find('date_time').text if cons_node.find('date_time') is not None else ''
+                })
+        
+        return consumptions
+
+    def get_invoices(self):
+        """
+        Obtiene todas las facturas registradas
+        """
+        tree = self.load_tree()
+        root = tree.getroot()
+        
+        invoices = []
+        for inv_node in root.findall('.//invoices/invoice'):
+            consumption_ids = []
+            for cons_ref in inv_node.findall('.//consumptions/consumption_ref'):
+                if cons_ref.text:
+                    consumption_ids.append(cons_ref.text)
+            
+            invoices.append({
+                'invoice_number': inv_node.get('number'),
+                'client_nit': inv_node.get('nit'),
+                'issue_date': inv_node.find('issue_date').text if inv_node.find('issue_date') is not None else '',
+                'total_amount': inv_node.find('total_amount').text if inv_node.find('total_amount') is not None else '',
+                'consumption_ids': consumption_ids
+            })
+        
+        return invoices
+
+    def cancel_instance(self, client_nit: str, instance_id: str, end_date: str):
+        """
+        Cancela una instancia específica de un cliente
+        Cambia el estado a 'Cancelada' y establece la fecha final
+        """
+        tree = self.load_tree()
+        root = tree.getroot()
+        
+        # Buscar el cliente
+        client_node = root.find(f".//clients/client[@nit='{client_nit}']")
+        if client_node is None:
+            raise ValueError(f"Cliente con NIT {client_nit} no encontrado")
+        
+        # Buscar la instancia
+        instance_node = client_node.find(f".//instances/instance[@id='{instance_id}']")
+        if instance_node is None:
+            raise ValueError(f"Instancia {instance_id} no encontrada para cliente {client_nit}")
+        
+        # Actualizar estado
+        status_node = instance_node.find('status')
+        if status_node is not None:
+            status_node.text = 'Cancelada'
+        else:
+            ET.SubElement(instance_node, 'status').text = 'Cancelada'
+        
+        # Actualizar fecha final
+        end_date_node = instance_node.find('end_date')
+        if end_date_node is not None:
+            end_date_node.text = end_date
+        else:
+            ET.SubElement(instance_node, 'end_date').text = end_date
+        
+        self.save_tree(tree)
+
+    def get_resource_by_id(self, resource_id: str):
+        """
+        Obtiene un recurso por su ID
+        """
+        tree = self.load_tree()
+        root = tree.getroot()
+        
+        res_node = root.find(f".//resources/resource[@id='{resource_id}']")
+        if res_node is None:
+            return None
+        
+        return {
+            'id': res_node.get('id'),
+            'name': res_node.find('name').text if res_node.find('name') is not None else '',
+            'abbreviation': res_node.find('abbreviation').text if res_node.find('abbreviation') is not None else '',
+            'metric': res_node.find('metric').text if res_node.find('metric') is not None else '',
+            'type': res_node.find('type').text if res_node.find('type') is not None else '',
+            'value_per_hour': float(res_node.find('value_per_hour').text) if res_node.find('value_per_hour') is not None else 0.0
+        }
+
+    def get_configuration_by_id(self, config_id: str):
+        """
+        Obtiene una configuración por su ID (buscando en todas las categorías)
+        """
+        tree = self.load_tree()
+        root = tree.getroot()
+        
+        for cat_node in root.findall('.//categories/category'):
+            config_node = cat_node.find(f".//configurations/configuration[@id='{config_id}']")
+            if config_node is not None:
+                config_resources = []
+                for res_node in config_node.findall('.//resources/resource'):
+                    config_resources.append({
+                        'resource_id': res_node.get('id'),
+                        'quantity': float(res_node.text) if res_node.text else 0.0
+                    })
+                
+                return {
+                    'id': config_node.get('id'),
+                    'name': config_node.find('name').text if config_node.find('name') is not None else '',
+                    'description': config_node.find('description').text if config_node.find('description') is not None else '',
+                    'resources': config_resources
+                }
+        
+        return None
+
+    def get_instance_by_id(self, client_nit: str, instance_id: str):
+        """
+        Obtiene una instancia específica de un cliente
+        """
+        tree = self.load_tree()
+        root = tree.getroot()
+        
+        client_node = root.find(f".//clients/client[@nit='{client_nit}']")
+        if client_node is None:
+            return None
+        
+        instance_node = client_node.find(f".//instances/instance[@id='{instance_id}']")
+        if instance_node is None:
+            return None
+        
+        return {
+            'id': instance_node.get('id'),
+            'configuration_id': instance_node.find('configuration_id').text if instance_node.find('configuration_id') is not None else '',
+            'name': instance_node.find('name').text if instance_node.find('name') is not None else '',
+            'start_date': instance_node.find('start_date').text if instance_node.find('start_date') is not None else '',
+            'status': instance_node.find('status').text if instance_node.find('status') is not None else '',
+            'end_date': instance_node.find('end_date').text if instance_node.find('end_date') is not None else ''
         }

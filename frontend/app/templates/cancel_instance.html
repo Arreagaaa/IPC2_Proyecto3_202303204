@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancelar Instancia - Tecnologías Chapinas S.A.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <nav class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <h1 class="text-2xl font-bold">Cancelar Instancia</h1>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-2xl mx-auto">
+            <a href="/" class="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Volver
+            </a>
+
+            <div class="bg-white rounded-lg shadow-xl p-8 border-l-4 border-red-500">
+                <div class="flex items-center mb-6">
+                    <div class="bg-red-100 rounded-full p-3 mr-4">
+                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Cancelar Instancia</h2>
+                        <p class="text-gray-600">Cambiar estado a "Cancelada"</p>
+                    </div>
+                </div>
+
+                {% if error %}
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
+                    <p><strong>Error:</strong> {{ error }}</p>
+                </div>
+                {% endif %}
+
+                <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6">
+                    <p class="text-yellow-700"><strong>Advertencia:</strong> Esta acción cambiará el estado de la instancia a "Cancelada" y establecerá una fecha final. Los consumos posteriores a esta fecha no se facturarán.</p>
+                </div>
+
+                <form method="POST" class="space-y-4">
+                    {% csrf_token %}
+                    
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Cliente <span class="text-red-500">*</span></label>
+                        <select name="client_nit" id="client_select" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500" onchange="filterInstances()">
+                            <option value="">Seleccione un cliente</option>
+                            {% for client in clients %}
+                            <option value="{{ client.nit }}" data-instances="{{ client.instances|length }}">
+                                {{ client.name }} ({{ client.nit }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Instancia <span class="text-red-500">*</span></label>
+                        <select name="instance_id" id="instance_select" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500">
+                            <option value="">Primero seleccione un cliente</option>
+                            {% for client in clients %}
+                                {% for instance in client.instances %}
+                                    {% if instance.status == "Vigente" %}
+                                    <option value="{{ instance.id }}" data-client="{{ client.nit }}" class="instance-option" style="display:none;">
+                                        {{ instance.name }} (ID: {{ instance.id }})
+                                    </option>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Fecha de Cancelación <span class="text-red-500">*</span></label>
+                        <input type="text" name="end_date" required placeholder="dd/mm/yyyy" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500">
+                        <p class="text-sm text-gray-500 mt-1">Formato: dd/mm/yyyy</p>
+                    </div>
+
+                    <div class="flex space-x-4 pt-4">
+                        <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
+                            Cancelar Instancia
+                        </button>
+                        <a href="/" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
+                            Volver
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterInstances() {
+            const clientSelect = document.getElementById('client_select');
+            const instanceSelect = document.getElementById('instance_select');
+            const selectedClient = clientSelect.value;
+            
+            // Reset instance select
+            instanceSelect.innerHTML = '<option value="">Seleccione una instancia</option>';
+            
+            if (selectedClient) {
+                const options = document.querySelectorAll('.instance-option');
+                options.forEach(option => {
+                    if (option.dataset.client === selectedClient) {
+                        const newOption = option.cloneNode(true);
+                        newOption.style.display = 'block';
+                        instanceSelect.appendChild(newOption);
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

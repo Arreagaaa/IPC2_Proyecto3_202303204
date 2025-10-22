@@ -54,3 +54,12 @@ class Client:
     address: Optional[str] = None
     email: Optional[str] = None
     instances: List[Instance] = field(default_factory=list)
+
+
+@dataclass
+class Invoice:
+    invoice_number: str  # Número único de factura
+    client_nit: str
+    issue_date: str  # Fecha de emisión (último día del rango)
+    total_amount: float
+    consumptions_ids: List[str] = field(default_factory=list)  # IDs de consumos facturados
