@@ -6,29 +6,36 @@
     <title>Resultado de Facturación - Tecnologías Chapinas S.A.</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-    <!-- Encabezado -->
-    <nav class="bg-blue-600 text-white shadow-lg">
-        <div class="container mx-auto px-4 py-4">
-            <h1 class="text-2xl font-bold">Tecnologías Chapinas S.A.</h1>
-            <p class="text-blue-100 text-sm">Resultado de Facturación</p>
+<body class="bg-slate-900 min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="bg-slate-800 border-b border-slate-700 shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center space-x-3">
+                <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
+                </svg>
+                <div>
+                    <h1 class="text-xl font-bold text-white">Tecnologías Chapinas S.A.</h1>
+                    <p class="text-sm text-slate-400">Resultado de Facturación</p>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <!-- Contenido -->
-    <div class="container mx-auto px-4 py-8">
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-8">
         <div class="max-w-6xl mx-auto">
-            <!-- Volver -->
-            <a href="/" class="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6">
+            <!-- Back Button -->
+            <a href="/" class="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6 transition-colors">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
                 Volver al inicio
             </a>
 
-            <!-- Mensaje de Éxito -->
+            <!-- Success Message -->
             {% if success %}
-            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-6 mb-6 rounded-lg shadow">
+            <div class="bg-green-500/10 border-l-4 border-green-500 text-green-400 p-6 mb-6 rounded-lg">
                 <div class="flex items-center mb-4">
                     <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -38,54 +45,54 @@
                         <p>{{ message }}</p>
                     </div>
                 </div>
-                <div class="bg-white p-4 rounded">
-                    <p class="text-gray-700"><strong>Rango de fechas:</strong> {{ start_date }} - {{ end_date }}</p>
-                    <p class="text-gray-700"><strong>Facturas generadas:</strong> {{ count }}</p>
+                <div class="bg-slate-800 border border-slate-700 p-4 rounded">
+                    <p class="text-slate-300"><strong>Rango de fechas:</strong> {{ start_date }} - {{ end_date }}</p>
+                    <p class="text-slate-300"><strong>Facturas generadas:</strong> {{ count }}</p>
                 </div>
             </div>
 
-            <!-- Tabla de Facturas Generadas -->
+            <!-- Invoices Table -->
             {% if invoices %}
-            <div class="bg-white rounded-lg shadow-xl p-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Facturas Generadas</h2>
+            <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6">
+                <h2 class="text-2xl font-bold text-white mb-4">Facturas Generadas</h2>
                 
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                    <table class="min-w-full">
+                        <thead class="bg-slate-700">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                                     Número de Factura
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                                     NIT Cliente
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                                     Fecha de Emisión
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                                     Consumos
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                                     Monto Total
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="divide-y divide-slate-700">
                             {% for invoice in invoices %}
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <tr class="hover:bg-slate-700/50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
                                     {{ invoice.invoice_number }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                                     {{ invoice.client_nit }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                                     {{ invoice.issue_date }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                                     {{ invoice.consumptions_count }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-600">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-400">
                                     ${{ invoice.total_amount|floatformat:2 }}
                                 </td>
                             </tr>
@@ -94,11 +101,11 @@
                     </table>
                 </div>
 
-                <!-- Resumen Total -->
-                <div class="mt-6 bg-gray-50 p-4 rounded-lg border-t-4 border-green-500">
+                <!-- Total Summary -->
+                <div class="mt-6 bg-slate-700 p-4 rounded-lg border-t-4 border-green-500">
                     <div class="flex justify-between items-center">
-                        <span class="text-lg font-semibold text-gray-700">Total Facturado:</span>
-                        <span class="text-2xl font-bold text-green-600">
+                        <span class="text-lg font-semibold text-slate-200">Total Facturado:</span>
+                        <span class="text-2xl font-bold text-green-400">
                             ${% widthratio invoices|length 1 1 as total %}
                             {% for inv in invoices %}
                                 {% if forloop.first %}
@@ -114,15 +121,15 @@
             {% endif %}
             {% endif %}
 
-            <!-- Botones de Acción -->
-            <div class="mt-6 flex space-x-4">
-                <a href="/facturar/" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
+            <!-- Action Buttons -->
+            <div class="mt-6 flex flex-wrap gap-4">
+                <a href="/facturar/" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
                     Generar Más Facturas
                 </a>
                 <a href="/facturas/" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
                     Ver Todas las Facturas
                 </a>
-                <a href="/" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
+                <a href="/" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
                     Volver al Inicio
                 </a>
             </div>

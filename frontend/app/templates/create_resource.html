@@ -6,27 +6,35 @@
     <title>Crear Recurso - Tecnologías Chapinas S.A.</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-    <nav class="bg-blue-600 text-white shadow-lg">
-        <div class="container mx-auto px-4 py-4">
-            <h1 class="text-2xl font-bold">Crear Nuevo Recurso</h1>
+<body class="bg-slate-900 min-h-screen">
+    <nav class="bg-slate-800 border-b border-slate-700 shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center space-x-3">
+                <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <div>
+                    <h1 class="text-xl font-bold text-white">Crear Recurso</h1>
+                    <p class="text-sm text-slate-400">Tecnologías Chapinas S.A.</p>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-6 py-8">
         <div class="max-w-2xl mx-auto">
-            <a href="/" class="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6">
+            <a href="/" class="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6 transition-colors">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
                 Volver
             </a>
 
-            <div class="bg-white rounded-lg shadow-xl p-8">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">Nuevo Recurso</h2>
+            <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Crear Recurso</h2>
 
                 {% if error %}
-                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
+                <div class="bg-red-500/10 border-l-4 border-red-500 text-red-400 p-4 mb-6 rounded">
                     <p><strong>Error:</strong> {{ error }}</p>
                 </div>
                 {% endif %}
@@ -35,28 +43,28 @@
                     {% csrf_token %}
                     
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">ID <span class="text-red-500">*</span></label>
-                        <input type="number" name="id" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500">
+                        <label class="block text-slate-300 font-semibold mb-2">ID <span class="text-red-400">*</span></label>
+                        <input type="number" name="id" required class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500">
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Nombre <span class="text-red-500">*</span></label>
-                        <input type="text" name="name" required placeholder="Ej: Memoria RAM" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500">
+                        <label class="block text-slate-300 font-semibold mb-2">Nombre <span class="text-red-400">*</span></label>
+                        <input type="text" name="name" required placeholder="Ej: Memoria RAM" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500">
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Abreviatura <span class="text-red-500">*</span></label>
-                        <input type="text" name="abbreviation" required placeholder="Ej: RAM" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500">
+                        <label class="block text-slate-300 font-semibold mb-2">Abreviatura <span class="text-red-400">*</span></label>
+                        <input type="text" name="abbreviation" required placeholder="Ej: RAM" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500">
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Métrica <span class="text-red-500">*</span></label>
-                        <input type="text" name="metric" required placeholder="Ej: GiB, Unidades" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500">
+                        <label class="block text-slate-300 font-semibold mb-2">Métrica <span class="text-red-400">*</span></label>
+                        <input type="text" name="metric" required placeholder="Ej: GiB, Unidades" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500">
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Tipo <span class="text-red-500">*</span></label>
-                        <select name="type" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500">
+                        <label class="block text-slate-300 font-semibold mb-2">Tipo <span class="text-red-400">*</span></label>
+                        <select name="type" required class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500">
                             <option value="">Seleccione un tipo</option>
                             <option value="Hardware">Hardware</option>
                             <option value="Software">Software</option>
@@ -64,15 +72,15 @@
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Costo por Hora (USD) <span class="text-red-500">*</span></label>
-                        <input type="number" step="0.01" name="value_per_hour" required placeholder="Ej: 0.75" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500">
+                        <label class="block text-slate-300 font-semibold mb-2">Costo por Hora (USD) <span class="text-red-400">*</span></label>
+                        <input type="number" step="0.01" name="value_per_hour" required placeholder="Ej: 0.75" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500">
                     </div>
 
                     <div class="flex space-x-4 pt-4">
-                        <button type="submit" class="flex-1 bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
+                        <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
                             Crear Recurso
                         </button>
-                        <a href="/" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
+                        <a href="/" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
                             Cancelar
                         </a>
                     </div>

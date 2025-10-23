@@ -191,29 +191,6 @@ Estructura:
 
 Ver archivos de ejemplo en `backend/instance/data/`
 
-## Desarrollo
-
-### Semana 1 - Release 1
-- Estructura básica del proyecto
-- Modelos de dominio
-- Parseo de XML
-- Validaciones (NIT, fechas)
-- Endpoints iniciales
-
-### Semana 2 - Release 2
-- CRUD completo
-- Comunicación XML real
-- Almacenamiento persistente
-- Interfaz Django completa
-- Tailwind CSS para diseño
-- Endpoints: /configuracion, /consumo, /inicializar, /consultar
-
-### Próximas Funcionalidades
-- Creación manual de datos
-- Proceso de facturación
-- Reportes en PDF
-- Análisis de ventas
-
 ## Notas Importantes
 
 1. **Orden de inicio:** Siempre iniciar backend antes que frontend

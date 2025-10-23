@@ -3,123 +3,100 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Resultado de la Operación</title>
+    <title>Resultado - Tecnologías Chapinas S.A.</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-    <!-- Encabezado -->
-    <nav class="bg-blue-600 text-white shadow-lg">
-      <div class="container mx-auto px-4 py-4">
-        <h1 class="text-2xl font-bold">Tecnologías Chapinas S.A.</h1>
-        <p class="text-blue-100 text-sm">
-          Sistema de Facturación de Infraestructura en la Nube
-        </p>
+  <body class="bg-slate-900 min-h-screen">
+    <nav class="bg-slate-800 border-b border-slate-700 shadow-lg">
+      <div class="container mx-auto px-6 py-4">
+        <div class="flex items-center space-x-3">
+          <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
+          </svg>
+          <div>
+            <h1 class="text-xl font-bold text-white">Tecnologías Chapinas S.A.</h1>
+            <p class="text-sm text-slate-400">Resultado de Operación</p>
+          </div>
+        </div>
       </div>
     </nav>
 
-    <!-- Contenido -->
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-6 py-8">
       <div class="max-w-3xl mx-auto">
-        <!-- Botón Regresar -->
-        <div class="mb-4">
-          <a
-            href="/"
-            class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
-          >
-            <svg
-              class="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              ></path>
-            </svg>
-            Regresar al inicio
-          </a>
-        </div>
+        <a href="/" class="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6 transition-colors">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Regresar al inicio
+        </a>
 
-        <!-- Resultado Exitoso -->
+        <!-- Success Result -->
         {% if success %}
-        <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6">
           <div class="flex items-center mb-4">
-            <div class="bg-green-100 rounded-full p-3 mr-4">
-              <svg
-                class="w-8 h-8 text-green-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                ></path>
+            <div class="bg-green-500/10 rounded-lg p-3 mr-4">
+              <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
             <div>
-              <h2 class="text-2xl font-bold text-green-600">
+              <h2 class="text-2xl font-bold text-green-400">
                 Operación Exitosa
               </h2>
             </div>
           </div>
 
-          <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
-            <p class="text-green-700">{{ message }}</p>
+          <div class="bg-green-500/10 border-l-4 border-green-500 p-4 mb-4">
+            <p class="text-green-300">{{ message }}</p>
           </div>
 
           {% if data.counts %}
           <div class="mt-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">
+            <h3 class="text-lg font-semibold text-white mb-3">
               Resumen de Operación:
             </h3>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
               {% if data.counts.resources %}
-              <div class="bg-blue-50 rounded-lg p-3 text-center">
-                <div class="text-2xl font-bold text-blue-600">
+              <div class="bg-blue-500/10 rounded-lg p-3 text-center border border-blue-500/20">
+                <div class="text-2xl font-bold text-blue-400">
                   {{ data.counts.resources }}
                 </div>
-                <div class="text-xs text-gray-600">Recursos</div>
+                <div class="text-xs text-slate-400">Recursos</div>
               </div>
               {% endif %} {% if data.counts.categories %}
-              <div class="bg-green-50 rounded-lg p-3 text-center">
-                <div class="text-2xl font-bold text-green-600">
+              <div class="bg-green-500/10 rounded-lg p-3 text-center border border-green-500/20">
+                <div class="text-2xl font-bold text-green-400">
                   {{ data.counts.categories }}
                 </div>
-                <div class="text-xs text-gray-600">Categorías</div>
+                <div class="text-xs text-slate-400">Categorías</div>
               </div>
               {% endif %} {% if data.counts.configurations %}
-              <div class="bg-purple-50 rounded-lg p-3 text-center">
-                <div class="text-2xl font-bold text-purple-600">
+              <div class="bg-purple-500/10 rounded-lg p-3 text-center border border-purple-500/20">
+                <div class="text-2xl font-bold text-purple-400">
                   {{ data.counts.configurations }}
                 </div>
-                <div class="text-xs text-gray-600">Configuraciones</div>
+                <div class="text-xs text-slate-400">Configuraciones</div>
               </div>
               {% endif %} {% if data.counts.clients %}
-              <div class="bg-yellow-50 rounded-lg p-3 text-center">
-                <div class="text-2xl font-bold text-yellow-600">
+              <div class="bg-yellow-500/10 rounded-lg p-3 text-center border border-yellow-500/20">
+                <div class="text-2xl font-bold text-yellow-400">
                   {{ data.counts.clients }}
                 </div>
-                <div class="text-xs text-gray-600">Clientes</div>
+                <div class="text-xs text-slate-400">Clientes</div>
               </div>
               {% endif %} {% if data.counts.instances %}
-              <div class="bg-red-50 rounded-lg p-3 text-center">
-                <div class="text-2xl font-bold text-red-600">
+              <div class="bg-red-500/10 rounded-lg p-3 text-center border border-red-500/20">
+                <div class="text-2xl font-bold text-red-400">
                   {{ data.counts.instances }}
                 </div>
-                <div class="text-xs text-gray-600">Instancias</div>
+                <div class="text-xs text-slate-400">Instancias</div>
               </div>
               {% endif %} {% if data.count %}
-              <div class="bg-indigo-50 rounded-lg p-3 text-center">
-                <div class="text-2xl font-bold text-indigo-600">
+              <div class="bg-indigo-500/10 rounded-lg p-3 text-center border border-indigo-500/20">
+                <div class="text-2xl font-bold text-indigo-400">
                   {{ data.count }}
                 </div>
-                <div class="text-xs text-gray-600">Consumos</div>
+                <div class="text-xs text-slate-400">Consumos</div>
               </div>
               {% endif %}
             </div>
@@ -127,43 +104,31 @@
           {% endif %}
         </div>
 
-        <!-- Resultado con Error -->
+        <!-- Error Result -->
         {% else %}
-        <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6">
           <div class="flex items-center mb-4">
-            <div class="bg-red-100 rounded-full p-3 mr-4">
-              <svg
-                class="w-8 h-8 text-red-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                ></path>
+            <div class="bg-red-500/10 rounded-lg p-3 mr-4">
+              <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
             <div>
-              <h2 class="text-2xl font-bold text-red-600">
+              <h2 class="text-2xl font-bold text-red-400">
                 Error en la Operación
               </h2>
             </div>
           </div>
 
-          <div class="bg-red-50 border-l-4 border-red-400 p-4">
-            <p class="text-red-700"><strong>Error:</strong> {{ error }}</p>
+          <div class="bg-red-500/10 border-l-4 border-red-500 p-4">
+            <p class="text-red-300"><strong>Error:</strong> {{ error }}</p>
           </div>
 
           <div class="mt-6">
-            <h3 class="text-sm font-semibold text-gray-700 mb-2">
+            <h3 class="text-sm font-semibold text-slate-300 mb-2">
               Posibles soluciones:
             </h3>
-            <ul
-              class="list-disc list-inside text-sm text-gray-600 space-y-1 ml-4"
-            >
+            <ul class="list-disc list-inside text-sm text-slate-400 space-y-1 ml-4">
               <li>Verifique que el archivo XML tenga el formato correcto</li>
               <li>Asegúrese de que el backend esté en ejecución</li>
               <li>

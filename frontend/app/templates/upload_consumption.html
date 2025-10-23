@@ -3,66 +3,48 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Enviar Mensaje de Consumo</title>
+    <title>Cargar Consumos - Tecnologías Chapinas S.A.</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-    <!-- Encabezado -->
-    <nav class="bg-blue-600 text-white shadow-lg">
-      <div class="container mx-auto px-4 py-4">
-        <h1 class="text-2xl font-bold">Tecnologías Chapinas S.A.</h1>
-        <p class="text-blue-100 text-sm">
-          Sistema de Facturación de Infraestructura en la Nube
-        </p>
+  <body class="bg-slate-900 min-h-screen">
+    <nav class="bg-slate-800 border-b border-slate-700 shadow-lg">
+      <div class="container mx-auto px-6 py-4">
+        <div class="flex items-center space-x-3">
+          <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          <div>
+            <h1 class="text-xl font-bold text-white">Cargar Consumos</h1>
+            <p class="text-sm text-slate-400">Tecnologías Chapinas S.A.</p>
+          </div>
+        </div>
       </div>
     </nav>
 
-    <!-- Contenido -->
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-6 py-8">
       <div class="max-w-2xl mx-auto">
-        <!-- Botón Regresar -->
-        <div class="mb-4">
-          <a
-            href="/"
-            class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
-          >
-            <svg
-              class="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              ></path>
-            </svg>
-            Regresar al inicio
-          </a>
-        </div>
+        <a href="/" class="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6 transition-colors">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Regresar al inicio
+        </a>
 
-        <!-- Formulario -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">
-            Enviar Mensaje de Consumo
+        <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-8">
+          <h2 class="text-2xl font-bold text-white mb-6">
+            Cargar Archivo de Consumos
           </h2>
 
-          <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-6">
-            <p class="text-sm text-green-700">
-              <strong>Estructura del XML:</strong> El archivo debe contener
-              consumos con NIT del cliente, ID de instancia, tiempo y fecha/hora
+          <div class="bg-blue-500/10 border-l-4 border-blue-500 p-4 mb-6">
+            <p class="text-sm text-blue-300">
+              <strong>Estructura del XML:</strong> El archivo debe contener los registros de consumo con fechas y tiempos de uso
             </p>
           </div>
 
           <form method="post" enctype="multipart/form-data" class="space-y-4">
             {% csrf_token %}
             <div>
-              <label
-                for="xmlfile"
-                class="block text-sm font-medium text-gray-700 mb-2"
-              >
+              <label for="xmlfile" class="block text-sm font-medium text-slate-300 mb-2">
                 Seleccione archivo XML de consumos
               </label>
               <input
@@ -71,28 +53,18 @@
                 id="xmlfile"
                 accept=".xml"
                 required
-                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
               />
             </div>
 
             <button
               type="submit"
-              class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-md transition duration-200 flex items-center justify-center"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center"
             >
-              <svg
-                class="w-5 h-5 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                ></path>
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
               </svg>
-              Enviar XML
+              Cargar Consumos
             </button>
           </form>
         </div>

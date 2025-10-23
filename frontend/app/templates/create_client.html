@@ -6,27 +6,35 @@
     <title>Crear Cliente - Tecnologías Chapinas S.A.</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-    <nav class="bg-blue-600 text-white shadow-lg">
-        <div class="container mx-auto px-4 py-4">
-            <h1 class="text-2xl font-bold">Registrar Nuevo Cliente</h1>
+<body class="bg-slate-900 min-h-screen">
+    <nav class="bg-slate-800 border-b border-slate-700 shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center space-x-3">
+                <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <div>
+                    <h1 class="text-xl font-bold text-white">Crear Cliente</h1>
+                    <p class="text-sm text-slate-400">Tecnologías Chapinas S.A.</p>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-6 py-8">
         <div class="max-w-2xl mx-auto">
-            <a href="/" class="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6">
+            <a href="/" class="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6 transition-colors">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
                 Volver
             </a>
 
-            <div class="bg-white rounded-lg shadow-xl p-8">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">Nuevo Cliente</h2>
+            <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Crear Cliente</h2>
 
                 {% if error %}
-                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
+                <div class="bg-red-500/10 border-l-4 border-red-500 text-red-400 p-4 mb-6 rounded">
                     <p><strong>Error:</strong> {{ error }}</p>
                 </div>
                 {% endif %}
@@ -35,41 +43,30 @@
                     {% csrf_token %}
                     
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">NIT <span class="text-red-500">*</span></label>
-                        <input type="text" name="nit" required placeholder="Ej: 110339001-K" pattern="^\d+-[0-9K]$" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500">
-                        <p class="text-sm text-gray-500 mt-1">Formato: números-dígito (ej: 34300-4)</p>
+                        <label class="block text-slate-300 font-semibold mb-2">NIT <span class="text-red-400">*</span></label>
+                        <input type="text" name="nit" required placeholder="Ej: 123456-7" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500">
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Nombre <span class="text-red-500">*</span></label>
-                        <input type="text" name="name" required placeholder="Ej: ACME Corporation" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500">
+                        <label class="block text-slate-300 font-semibold mb-2">Nombre <span class="text-red-400">*</span></label>
+                        <input type="text" name="name" required placeholder="Ej: Empresa S.A." class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500">
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Usuario <span class="text-red-500">*</span></label>
-                        <input type="text" name="username" required placeholder="Usuario para acceso" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500">
+                        <label class="block text-slate-300 font-semibold mb-2">Dirección</label>
+                        <input type="text" name="address" placeholder="Dirección del cliente" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500">
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Contraseña <span class="text-red-500">*</span></label>
-                        <input type="password" name="password" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Dirección</label>
-                        <input type="text" name="address" placeholder="Dirección física" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Correo Electrónico</label>
-                        <input type="email" name="email" placeholder="correo@ejemplo.com" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500">
+                        <label class="block text-slate-300 font-semibold mb-2">Teléfono</label>
+                        <input type="tel" name="phone" placeholder="Ej: 2222-2222" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-green-500">
                     </div>
 
                     <div class="flex space-x-4 pt-4">
-                        <button type="submit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
-                            Registrar Cliente
+                        <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
+                            Crear Cliente
                         </button>
-                        <a href="/" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
+                        <a href="/" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
                             Cancelar
                         </a>
                     </div>
