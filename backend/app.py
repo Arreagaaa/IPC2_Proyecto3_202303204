@@ -285,7 +285,8 @@ def create_instance():
             return jsonify({'error': 'No se proporcionaron datos'}), 400
 
         # Validar campos requeridos
-        required = ['client_nit', 'id', 'configuration_id', 'name', 'start_date']
+        required = ['client_nit', 'id',
+                    'configuration_id', 'name', 'start_date']
         for field in required:
             if field not in data:
                 return jsonify({'error': f'Campo requerido: {field}'}), 400
@@ -456,6 +457,7 @@ def get_invoices():
 
 # Endpoint para consultar consumos pendientes
 @app.route('/api/consumosPendientes', methods=['GET'])
+@app.route('/consumos/pendientes', methods=['GET'])
 def get_unbilled_consumptions():
     """
     Obtiene todos los consumos que no han sido facturados
@@ -466,6 +468,36 @@ def get_unbilled_consumptions():
             'status': 'ok',
             'consumptions': consumptions,
             'count': len(consumptions)
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# Endpoint para obtener resumen/estadísticas del dashboard
+@app.route('/api/summary', methods=['GET'])
+@app.route('/summary', methods=['GET'])
+def get_summary():
+    """
+    Obtiene el resumen de estadísticas para el dashboard
+    """
+    try:
+        resources = storage.get_resources()
+        clients = storage.get_clients()
+        invoices = storage.get_invoices()
+
+        # Contar instancias totales
+        total_instances = 0
+        for client in clients:
+            total_instances += len(client.get('instances', []))
+
+        return jsonify({
+            'status': 'ok',
+            'summary': {
+                'resources': len(resources),
+                'clients': len(clients),
+                'instances': total_instances,
+                'invoices': len(invoices)
+            }
         }), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500

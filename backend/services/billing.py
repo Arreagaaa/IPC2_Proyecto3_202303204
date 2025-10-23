@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Servicio de facturación
-Calcula montos por cliente, configuración y recurso
-"""
-
 from datetime import datetime
 from typing import Dict, List, Tuple
 from models.storage import XMLStorage

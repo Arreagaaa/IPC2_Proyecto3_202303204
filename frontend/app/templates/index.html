@@ -68,7 +68,9 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-slate-400 text-sm mb-1">Recursos</p>
-              <p class="text-2xl font-bold text-white">--</p>
+              <p class="text-2xl font-bold text-white">
+                {{ summary.resources }}
+              </p>
             </div>
             <div class="bg-blue-500/10 p-3 rounded-lg">
               <svg
@@ -92,7 +94,7 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-slate-400 text-sm mb-1">Clientes</p>
-              <p class="text-2xl font-bold text-white">--</p>
+              <p class="text-2xl font-bold text-white">{{ summary.clients }}</p>
             </div>
             <div class="bg-blue-500/10 p-3 rounded-lg">
               <svg
@@ -116,7 +118,9 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-slate-400 text-sm mb-1">Instancias</p>
-              <p class="text-2xl font-bold text-white">--</p>
+              <p class="text-2xl font-bold text-white">
+                {{ summary.instances }}
+              </p>
             </div>
             <div class="bg-blue-500/10 p-3 rounded-lg">
               <svg
@@ -140,7 +144,9 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-slate-400 text-sm mb-1">Facturas</p>
-              <p class="text-2xl font-bold text-white">--</p>
+              <p class="text-2xl font-bold text-white">
+                {{ summary.invoices }}
+              </p>
             </div>
             <div class="bg-blue-500/10 p-3 rounded-lg">
               <svg
@@ -486,7 +492,7 @@
           </a>
 
           <a
-            href="/cancelar-instancia/"
+            href="/cancelar/instancia/"
             class="block bg-slate-800 border border-slate-700 hover:border-red-500 rounded-lg p-6 transition-all group"
           >
             <div class="flex items-start space-x-4">

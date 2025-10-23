@@ -9,7 +9,19 @@ BACKEND_URL = 'http://127.0.0.1:5001'
 
 def index(request):
     """Vista principal del sistema"""
-    return render(request, 'index.html')
+    # Obtener estadísticas del backend
+    try:
+        response = requests.get(f'{BACKEND_URL}/summary')
+        if response.status_code == 200:
+            data = response.json()
+            summary = data.get('summary', {})
+        else:
+            summary = {'resources': 0, 'clients': 0,
+                       'instances': 0, 'invoices': 0}
+    except:
+        summary = {'resources': 0, 'clients': 0, 'instances': 0, 'invoices': 0}
+
+    return render(request, 'index.html', {'summary': summary})
 
 
 def upload_configuration(request):
@@ -398,6 +410,30 @@ def view_invoices(request):
             })
     except Exception as e:
         return render(request, 'invoices.html', {
+            'success': False,
+            'error': str(e)
+        })
+
+
+def pending_consumptions(request):
+    """Ver consumos pendientes de facturar"""
+    try:
+        response = requests.get(f'{BACKEND_URL}/consumos/pendientes')
+
+        if response.status_code == 200:
+            data = response.json()
+            return render(request, 'pending_consumptions.html', {
+                'success': True,
+                'consumptions': data.get('consumptions', []),
+                'count': data.get('count', 0)
+            })
+        else:
+            return render(request, 'pending_consumptions.html', {
+                'success': False,
+                'error': response.json().get('error', 'Error al consultar consumos pendientes')
+            })
+    except Exception as e:
+        return render(request, 'pending_consumptions.html', {
             'success': False,
             'error': str(e)
         })

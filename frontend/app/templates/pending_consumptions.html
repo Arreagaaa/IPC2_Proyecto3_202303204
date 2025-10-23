@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumos Pendientes - Tecnologías Chapinas S.A.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 min-h-screen">
+    <nav class="bg-slate-800 border-b border-slate-700 shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center space-x-3">
+                <svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                    <h1 class="text-xl font-bold text-white">Tecnologías Chapinas S.A.</h1>
+                    <p class="text-sm text-slate-400">Consumos Pendientes de Facturar</p>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-8">
+        <div class="max-w-6xl mx-auto">
+            <a href="/" class="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6 transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Volver al inicio
+            </a>
+
+            <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Consumos Pendientes</h2>
+                        <p class="text-slate-400">Total de consumos sin facturar: {{ count }}</p>
+                    </div>
+                    <a href="/facturar/" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+                        Generar Facturas
+                    </a>
+                </div>
+
+                {% if success %}
+                    {% if consumptions %}
+                    <div class="bg-yellow-500/10 border-l-4 border-yellow-500 p-4 mb-6 rounded">
+                        <p class="text-yellow-300 text-sm">
+                            <strong>Nota:</strong> Estos consumos aún no han sido facturados. Use el proceso de facturación para generarlas.
+                        </p>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead class="bg-slate-700">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        NIT Cliente
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        ID Instancia
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        Horas Consumidas
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        Fecha y Hora
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                        Estado
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700">
+                                {% for consumption in consumptions %}
+                                <tr class="hover:bg-slate-700/50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+                                        {{ consumption.nit }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+                                        {{ consumption.instance_id }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+                                        {{ consumption.time_hours }} hrs
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                                        {{ consumption.date_time }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs font-semibold rounded bg-yellow-500/20 text-yellow-400">
+                                            Pendiente
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="bg-green-500/10 border-l-4 border-green-500 p-6 rounded">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <div>
+                                <p class="font-semibold text-green-400">No hay consumos pendientes</p>
+                                <p class="text-green-300">Todos los consumos han sido facturados</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div class="bg-red-500/10 border-l-4 border-red-500 text-red-400 p-6 rounded">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p><strong>Error:</strong> {{ error }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mt-6 flex space-x-4">
+                <a href="/facturar/" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
+                    Ir a Facturación
+                </a>
+                <a href="/consultar/" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
+                    Consultar Todos los Datos
+                </a>
+                <a href="/" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
+                    Volver al Inicio
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

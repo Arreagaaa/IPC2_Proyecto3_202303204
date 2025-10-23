@@ -17,4 +17,5 @@ urlpatterns = [
     path('crear/instancia/', views.create_instance, name='create_instance'),
     path('cancelar/instancia/', views.cancel_instance_view, name='cancel_instance'),
     path('facturas/', views.view_invoices, name='view_invoices'),
+    path('consumos-pendientes/', views.pending_consumptions, name='pending_consumptions'),
 ]

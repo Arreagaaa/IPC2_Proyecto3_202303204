@@ -49,5 +49,20 @@
         </instancia>
       </listaInstancias>
     </cliente>
+    <cliente nit="85125-K">
+      <nombre>JAKES Inc.</nombre>
+      <usuario>jakes_user</usuario>
+      <clave>pass123</clave>
+      <direccion>Guatemala City</direccion>
+      <correoElectronico>contact@jakes.com</correoElectronico>
+      <listaInstancias>
+        <instancia id="555">
+          <idConfiguracion>100</idConfiguracion>
+          <nombre>jakes-prod-1</nombre>
+          <fechaInicio>01/01/2025</fechaInicio>
+          <estado>Vigente</estado>
+        </instancia>
+      </listaInstancias>
+    </cliente>
   </listaClientes>
 </archivoConfiguraciones>
