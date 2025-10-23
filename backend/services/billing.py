@@ -56,7 +56,8 @@ class BillingService:
         resource_details = {}
 
         for config_res in config['resources']:
-            resource = self.storage.get_resource_by_id(config_res['resource_id'])
+            resource = self.storage.get_resource_by_id(
+                config_res['resource_id'])
             if resource:
                 quantity = config_res['quantity']
                 cost_per_hour = resource['value_per_hour']

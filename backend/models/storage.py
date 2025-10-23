@@ -151,8 +151,9 @@ class XMLStorage:
 
         # Contar solo recursos del sistema (no los de configuraciones)
         resources_node = root.find('resources')
-        resources_count = len(resources_node.findall('resource')) if resources_node is not None else 0
-        
+        resources_count = len(resources_node.findall(
+            'resource')) if resources_node is not None else 0
+
         categories_count = len(root.findall('.//categories/category'))
         configurations_count = len(root.findall(
             './/categories/category/configurations/configuration'))
@@ -321,7 +322,7 @@ class XMLStorage:
         """
         tree = self.load_tree()
         root = tree.getroot()
-        
+
         consumptions = []
         for idx, cons_node in enumerate(root.findall('.//consumptions/consumption')):
             if cons_node.get('invoiced') != 'true':
@@ -332,7 +333,7 @@ class XMLStorage:
                     'time_hours': cons_node.find('time_hours').text if cons_node.find('time_hours') is not None else '',
                     'date_time': cons_node.find('date_time').text if cons_node.find('date_time') is not None else ''
                 })
-        
+
         return consumptions
 
     def get_resources(self):
@@ -341,7 +342,7 @@ class XMLStorage:
         """
         tree = self.load_tree()
         root = tree.getroot()
-        
+
         resources = []
         resources_node = root.find('resources')
         if resources_node is not None:
@@ -354,7 +355,7 @@ class XMLStorage:
                     'type': res_node.find('type').text if res_node.find('type') is not None else '',
                     'value_per_hour': res_node.find('value_per_hour').text if res_node.find('value_per_hour') is not None else ''
                 })
-        
+
         return resources
 
     def get_clients(self):
@@ -363,7 +364,7 @@ class XMLStorage:
         """
         tree = self.load_tree()
         root = tree.getroot()
-        
+
         clients = []
         for client_node in root.findall('.//clients/client'):
             instances = []
@@ -376,7 +377,7 @@ class XMLStorage:
                     'status': inst_node.find('status').text if inst_node.find('status') is not None else '',
                     'end_date': inst_node.find('end_date').text if inst_node.find('end_date') is not None else ''
                 })
-            
+
             clients.append({
                 'nit': client_node.get('nit'),
                 'name': client_node.find('name').text if client_node.find('name') is not None else '',
@@ -385,7 +386,7 @@ class XMLStorage:
                 'address': client_node.find('address').text if client_node.find('address') is not None else '',
                 'instances': instances
             })
-        
+
         return clients
 
     def get_invoices(self):
@@ -394,14 +395,14 @@ class XMLStorage:
         """
         tree = self.load_tree()
         root = tree.getroot()
-        
+
         invoices = []
         for inv_node in root.findall('.//invoices/invoice'):
             consumption_ids = []
             for cons_ref in inv_node.findall('.//consumptions/consumption_ref'):
                 if cons_ref.text:
                     consumption_ids.append(cons_ref.text)
-            
+
             invoices.append({
                 'invoice_number': inv_node.get('number'),
                 'client_nit': inv_node.get('nit'),
@@ -409,7 +410,7 @@ class XMLStorage:
                 'total_amount': inv_node.find('total_amount').text if inv_node.find('total_amount') is not None else '',
                 'consumption_ids': consumption_ids
             })
-        
+
         return invoices
 
     def cancel_instance(self, client_nit: str, instance_id: str, end_date: str):
@@ -419,31 +420,33 @@ class XMLStorage:
         """
         tree = self.load_tree()
         root = tree.getroot()
-        
+
         # Buscar el cliente
         client_node = root.find(f".//clients/client[@nit='{client_nit}']")
         if client_node is None:
             raise ValueError(f"Cliente con NIT {client_nit} no encontrado")
-        
+
         # Buscar la instancia
-        instance_node = client_node.find(f".//instances/instance[@id='{instance_id}']")
+        instance_node = client_node.find(
+            f".//instances/instance[@id='{instance_id}']")
         if instance_node is None:
-            raise ValueError(f"Instancia {instance_id} no encontrada para cliente {client_nit}")
-        
+            raise ValueError(
+                f"Instancia {instance_id} no encontrada para cliente {client_nit}")
+
         # Actualizar estado
         status_node = instance_node.find('status')
         if status_node is not None:
             status_node.text = 'Cancelada'
         else:
             ET.SubElement(instance_node, 'status').text = 'Cancelada'
-        
+
         # Actualizar fecha final
         end_date_node = instance_node.find('end_date')
         if end_date_node is not None:
             end_date_node.text = end_date
         else:
             ET.SubElement(instance_node, 'end_date').text = end_date
-        
+
         self.save_tree(tree)
 
     def get_resource_by_id(self, resource_id: str):
@@ -452,11 +455,11 @@ class XMLStorage:
         """
         tree = self.load_tree()
         root = tree.getroot()
-        
+
         res_node = root.find(f".//resources/resource[@id='{resource_id}']")
         if res_node is None:
             return None
-        
+
         return {
             'id': res_node.get('id'),
             'name': res_node.find('name').text if res_node.find('name') is not None else '',
@@ -472,9 +475,10 @@ class XMLStorage:
         """
         tree = self.load_tree()
         root = tree.getroot()
-        
+
         for cat_node in root.findall('.//categories/category'):
-            config_node = cat_node.find(f".//configurations/configuration[@id='{config_id}']")
+            config_node = cat_node.find(
+                f".//configurations/configuration[@id='{config_id}']")
             if config_node is not None:
                 config_resources = []
                 for res_node in config_node.findall('.//resources/resource'):
@@ -482,14 +486,14 @@ class XMLStorage:
                         'resource_id': res_node.get('id'),
                         'quantity': float(res_node.text) if res_node.text else 0.0
                     })
-                
+
                 return {
                     'id': config_node.get('id'),
                     'name': config_node.find('name').text if config_node.find('name') is not None else '',
                     'description': config_node.find('description').text if config_node.find('description') is not None else '',
                     'resources': config_resources
                 }
-        
+
         return None
 
     def get_instance_by_id(self, client_nit: str, instance_id: str):
@@ -498,15 +502,16 @@ class XMLStorage:
         """
         tree = self.load_tree()
         root = tree.getroot()
-        
+
         client_node = root.find(f".//clients/client[@nit='{client_nit}']")
         if client_node is None:
             return None
-        
-        instance_node = client_node.find(f".//instances/instance[@id='{instance_id}']")
+
+        instance_node = client_node.find(
+            f".//instances/instance[@id='{instance_id}']")
         if instance_node is None:
             return None
-        
+
         return {
             'id': instance_node.get('id'),
             'configuration_id': instance_node.find('configuration_id').text if instance_node.find('configuration_id') is not None else '',

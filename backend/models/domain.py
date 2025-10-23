@@ -62,4 +62,5 @@ class Invoice:
     client_nit: str
     issue_date: str  # Fecha de emisión (último día del rango)
     total_amount: float
-    consumptions_ids: List[str] = field(default_factory=list)  # IDs de consumos facturados
+    consumptions_ids: List[str] = field(
+        default_factory=list)  # IDs de consumos facturados
