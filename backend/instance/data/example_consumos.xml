@@ -1,15 +1,23 @@
 <?xml version="1.0"?>
 <listadoConsumos>
-    <consumo nitCliente="110339001-K" idInstancia="1">
+    <consumo nitCliente="110339001-K" idInstancia="500">
         <tiempo>2.5</tiempo>
         <fechaHora>Guatemala, 15/01/2025 14:30</fechaHora>
     </consumo>
-    <consumo nitCliente="110339001-K" idInstancia="1">
+    <consumo nitCliente="110339001-K" idInstancia="500">
         <tiempo>3.75</tiempo>
         <fechaHora>en la ciudad de Guatemala, 16/01/2025 09:15 se registra el consumo</fechaHora>
     </consumo>
-    <consumo nitCliente="34300-4" idInstancia="2">
-        <tiempo>1.0</tiempo>
-        <fechaHora>17/01/2025 18:00</fechaHora>
+    <consumo nitCliente="85125-K" idInstancia="555">
+        <tiempo>4.0</tiempo>
+        <fechaHora>10/01/2025 10:00</fechaHora>
+    </consumo>
+    <consumo nitCliente="85125-K" idInstancia="555">
+        <tiempo>6.5</tiempo>
+        <fechaHora>Guatemala, 11/01/2025 14:30</fechaHora>
+    </consumo>
+    <consumo nitCliente="85125-K" idInstancia="555">
+        <tiempo>2.25</tiempo>
+        <fechaHora>12/01/2025 09:00</fechaHora>
     </consumo>
 </listadoConsumos>
