@@ -149,7 +149,10 @@ class XMLStorage:
         tree = self.load_tree()
         root = tree.getroot()
 
-        resources_count = len(root.findall('.//resources/resource'))
+        # Contar solo recursos del sistema (no los de configuraciones)
+        resources_node = root.find('resources')
+        resources_count = len(resources_node.findall('resource')) if resources_node is not None else 0
+        
         categories_count = len(root.findall('.//categories/category'))
         configurations_count = len(root.findall(
             './/categories/category/configurations/configuration'))
@@ -189,17 +192,19 @@ class XMLStorage:
         tree = self.load_tree()
         root = tree.getroot()
 
-        # Obtener recursos
+        # Obtener recursos (solo del nivel raíz, no de configuraciones)
         resources = []
-        for res_node in root.findall('.//resources/resource'):
-            resources.append({
-                'id': res_node.get('id'),
-                'name': res_node.find('name').text if res_node.find('name') is not None else '',
-                'abbreviation': res_node.find('abbreviation').text if res_node.find('abbreviation') is not None else '',
-                'metric': res_node.find('metric').text if res_node.find('metric') is not None else '',
-                'type': res_node.find('type').text if res_node.find('type') is not None else '',
-                'value_per_hour': res_node.find('value_per_hour').text if res_node.find('value_per_hour') is not None else ''
-            })
+        resources_node = root.find('resources')
+        if resources_node is not None:
+            for res_node in resources_node.findall('resource'):
+                resources.append({
+                    'id': res_node.get('id'),
+                    'name': res_node.find('name').text if res_node.find('name') is not None else '',
+                    'abbreviation': res_node.find('abbreviation').text if res_node.find('abbreviation') is not None else '',
+                    'metric': res_node.find('metric').text if res_node.find('metric') is not None else '',
+                    'type': res_node.find('type').text if res_node.find('type') is not None else '',
+                    'value_per_hour': res_node.find('value_per_hour').text if res_node.find('value_per_hour') is not None else ''
+                })
 
         # Obtener categorías con configuraciones
         categories = []
@@ -207,7 +212,7 @@ class XMLStorage:
             configurations = []
             for config_node in cat_node.findall('.//configurations/configuration'):
                 config_resources = []
-                for res_node in config_node.findall('.//resources/resource'):
+                for res_node in config_node.findall('./resources/resource'):
                     config_resources.append({
                         'resource_id': res_node.get('id'),
                         'quantity': res_node.text
@@ -329,6 +334,59 @@ class XMLStorage:
                 })
         
         return consumptions
+
+    def get_resources(self):
+        """
+        Obtiene todos los recursos del sistema
+        """
+        tree = self.load_tree()
+        root = tree.getroot()
+        
+        resources = []
+        resources_node = root.find('resources')
+        if resources_node is not None:
+            for res_node in resources_node.findall('resource'):
+                resources.append({
+                    'id': res_node.get('id'),
+                    'name': res_node.find('name').text if res_node.find('name') is not None else '',
+                    'abbreviation': res_node.find('abbreviation').text if res_node.find('abbreviation') is not None else '',
+                    'metric': res_node.find('metric').text if res_node.find('metric') is not None else '',
+                    'type': res_node.find('type').text if res_node.find('type') is not None else '',
+                    'value_per_hour': res_node.find('value_per_hour').text if res_node.find('value_per_hour') is not None else ''
+                })
+        
+        return resources
+
+    def get_clients(self):
+        """
+        Obtiene todos los clientes con sus instancias
+        """
+        tree = self.load_tree()
+        root = tree.getroot()
+        
+        clients = []
+        for client_node in root.findall('.//clients/client'):
+            instances = []
+            for inst_node in client_node.findall('.//instances/instance'):
+                instances.append({
+                    'id': inst_node.get('id'),
+                    'configuration_id': inst_node.find('configuration_id').text if inst_node.find('configuration_id') is not None else '',
+                    'name': inst_node.find('name').text if inst_node.find('name') is not None else '',
+                    'start_date': inst_node.find('start_date').text if inst_node.find('start_date') is not None else '',
+                    'status': inst_node.find('status').text if inst_node.find('status') is not None else '',
+                    'end_date': inst_node.find('end_date').text if inst_node.find('end_date') is not None else ''
+                })
+            
+            clients.append({
+                'nit': client_node.get('nit'),
+                'name': client_node.find('name').text if client_node.find('name') is not None else '',
+                'username': client_node.find('username').text if client_node.find('username') is not None else '',
+                'email': client_node.find('email').text if client_node.find('email') is not None else '',
+                'address': client_node.find('address').text if client_node.find('address') is not None else '',
+                'instances': instances
+            })
+        
+        return clients
 
     def get_invoices(self):
         """

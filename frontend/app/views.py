@@ -10,16 +10,19 @@ BACKEND_URL = 'http://127.0.0.1:5001'
 def index(request):
     """Vista principal del sistema"""
     # Obtener estadísticas del backend
+    summary = {'resources': 0, 'clients': 0, 'instances': 0, 'invoices': 0}
     try:
-        response = requests.get(f'{BACKEND_URL}/summary')
+        response = requests.get(f'{BACKEND_URL}/summary', timeout=2)
         if response.status_code == 200:
             data = response.json()
             summary = data.get('summary', {})
+            print(f"✓ Backend respondió: {summary}")
         else:
-            summary = {'resources': 0, 'clients': 0,
-                       'instances': 0, 'invoices': 0}
-    except:
-        summary = {'resources': 0, 'clients': 0, 'instances': 0, 'invoices': 0}
+            print(f"✗ Backend error {response.status_code}: {response.text}")
+    except requests.exceptions.ConnectionError:
+        print("✗ No se puede conectar al backend en http://127.0.0.1:5001")
+    except Exception as e:
+        print(f"✗ Error obteniendo estadísticas: {e}")
 
     return render(request, 'index.html', {'summary': summary})
 
