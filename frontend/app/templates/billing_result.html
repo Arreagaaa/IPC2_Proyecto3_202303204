@@ -174,9 +174,7 @@
                 >Total Facturado:</span
               >
               <span class="text-2xl font-bold text-green-400">
-                ${% widthratio invoices|length 1 1 as total %} {% for inv in
-                invoices %} {% if forloop.first %} {{ inv.total_amount|add:0 }}
-                {% else %} + {{ inv.total_amount }} {% endif %} {% endfor %}
+                ${{ total_amount|floatformat:2 }}
               </span>
             </div>
           </div>

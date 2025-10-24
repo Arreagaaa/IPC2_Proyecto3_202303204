@@ -19,10 +19,9 @@ storage = XMLStorage(DB_FILE)
 billing_service = BillingService(storage)
 
 
-# Endpoint para configuraciones (version completa)
+# Endpoint para configuraciones (version completa - XML masivo)
 @app.route('/configuracion', methods=['POST'])
-@app.route('/api/crearConfiguracion', methods=['POST'])
-def create_configuration():
+def upload_configuration_xml():
     data = request.data
     if not data:
         return jsonify({'error': 'No se proporcionó XML'}), 400
@@ -203,9 +202,9 @@ def create_category():
         return jsonify({'error': str(e)}), 500
 
 
-# Endpoint para crear configuracion (CRUD)
+# Endpoint para crear configuracion (CRUD - JSON individual)
 @app.route('/api/crearConfiguracion', methods=['POST'])
-def create_configuration():
+def create_single_configuration():
 
     try:
         data = request.get_json()
@@ -546,7 +545,7 @@ def get_invoice_report(invoice_id):
         invoices = storage.get_invoices()
         invoice = None
         for inv in invoices:
-            if inv.get('id') == invoice_id:
+            if inv.get('invoice_number') == invoice_id:
                 invoice = inv
                 break
 
@@ -554,30 +553,48 @@ def get_invoice_report(invoice_id):
             return jsonify({'error': 'Factura no encontrada'}), 404
 
         # Obtener datos del cliente
-        clients = storage.get_clients()
+        clients = storage.get_all_data().get('clients', [])
         client = None
         for c in clients:
-            if c.get('nit') == invoice.get('nit'):
+            if c.get('nit') == invoice.get('client_nit'):
                 client = c
                 break
 
         if not client:
             return jsonify({'error': 'Cliente no encontrado'}), 404
 
-        # Obtener consumos de la factura
-        consumptions = storage.get_consumptions()
-        invoice_consumptions = [
-            c for c in consumptions if c.get('invoice_id') == invoice_id]
+        # Obtener todos los consumos del sistema
+        all_data = storage.get_all_data()
+        all_consumptions = all_data.get('consumptions', [])
+        
+        # Los consumption_ids de la factura son índices en el array de consumos
+        invoice_consumptions = []
+        for idx_str in invoice.get('consumption_ids', []):
+            try:
+                idx = int(idx_str)
+                if 0 <= idx < len(all_consumptions):
+                    consumption = all_consumptions[idx]
+                    # Verificar que el consumo pertenece al cliente
+                    if consumption.get('nit') == invoice.get('client_nit'):
+                        invoice_consumptions.append(consumption)
+            except (ValueError, IndexError):
+                continue
+
+        if not invoice_consumptions:
+            return jsonify({'error': 'No se encontraron consumos para esta factura'}), 404
 
         # Obtener recursos
-        resources = storage.get_resources()
+        resources = all_data.get('resources', [])
 
-        # Construir datos para el reporte
-        instances_data = []
+        # Construir datos para el reporte agrupados por instancia
+        instances_data = {}
+        
         for consumption in invoice_consumptions:
             instance_id = consumption.get('instance_id')
+            time_hours = float(consumption.get('time_hours', 0))
+            date_time = consumption.get('date_time', 'N/A')
 
-            # Buscar instancia
+            # Buscar instancia en el cliente
             instance = None
             for inst in client.get('instances', []):
                 if str(inst.get('id')) == str(instance_id):
@@ -587,20 +604,34 @@ def get_invoice_report(invoice_id):
             if not instance:
                 continue
 
-            # Obtener configuracion de la instancia
-            config_id = instance.get('config_id')
-            config = storage.get_configuration_by_id(config_id)
+            # Obtener configuración de la instancia
+            config_id = instance.get('configuration_id')
+            config = storage.get_configuration_by_id(int(config_id))
 
             if not config:
                 continue
 
-            # Calcular recursos consumidos
-            hours = float(consumption.get('hours', 0))
-            instance_resources = []
-            instance_subtotal = 0.0
+            # Si la instancia no está en el diccionario, agregarla
+            if instance_id not in instances_data:
+                instances_data[instance_id] = {
+                    'instance_id': instance_id,
+                    'instance_name': instance.get('name', f'Instancia {instance_id}'),
+                    'config_id': config_id,
+                    'config_name': config.get('name', 'N/A'),
+                    'consumptions': [],
+                    'resources': {},  # Diccionario para consolidar recursos
+                    'subtotal': 0.0
+                }
 
+            # Agregar consumo individual con fecha/hora
+            instances_data[instance_id]['consumptions'].append({
+                'date_time': date_time,
+                'time_hours': time_hours  # Asegurar que sea el nombre correcto
+            })
+
+            # Consolidar recursos por instancia
             for res_config in config.get('resources', []):
-                resource_id = res_config.get('id')
+                resource_id = res_config.get('resource_id')
                 quantity = float(res_config.get('quantity', 0))
 
                 # Buscar recurso
@@ -611,41 +642,39 @@ def get_invoice_report(invoice_id):
                         break
 
                 if resource:
-                    cost_per_hour = float(resource.get('cost_per_hour', 0))
-                    amount = quantity * cost_per_hour * hours
-                    instance_subtotal += amount
+                    cost_per_hour = float(resource.get('value_per_hour', 0))
+                    amount = quantity * cost_per_hour * time_hours
 
-                    instance_resources.append({
-                        'name': resource.get('name', 'N/A'),
-                        'quantity': quantity,
-                        'cost_per_hour': cost_per_hour,
-                        'hours': hours,
-                        'amount': amount
-                    })
+                    # Consolidar recurso
+                    res_key = resource_id
+                    if res_key not in instances_data[instance_id]['resources']:
+                        instances_data[instance_id]['resources'][res_key] = {
+                            'name': resource.get('name', 'N/A'),
+                            'abbreviation': resource.get('abbreviation', ''),
+                            'quantity': quantity,
+                            'cost_per_hour': cost_per_hour,
+                            'hours': 0.0,
+                            'amount': 0.0
+                        }
+                    
+                    # Sumar horas y monto
+                    instances_data[instance_id]['resources'][res_key]['hours'] += time_hours
+                    instances_data[instance_id]['resources'][res_key]['amount'] += amount
+                    instances_data[instance_id]['subtotal'] += amount
 
-            # Agregar instancia
-            instance_found = False
-            for inst_data in instances_data:
-                if inst_data['instance_id'] == instance_id:
-                    instance_found = True
-                    inst_data['subtotal'] += instance_subtotal
-                    break
-
-            if not instance_found:
-                instances_data.append({
-                    'instance_id': instance_id,
-                    'instance_name': instance.get('name', 'N/A'),
-                    'subtotal': instance_subtotal,
-                    'resources': instance_resources
-                })
+        # Convertir diccionario a lista y convertir recursos de dict a list
+        instances_list = []
+        for inst in instances_data.values():
+            inst['resources'] = list(inst['resources'].values())
+            instances_list.append(inst)
 
         # Preparar datos para el PDF
         invoice_data = {
             'invoice': {
-                'id': invoice.get('id'),
-                'nit': invoice.get('nit'),
-                'date': invoice.get('date'),
-                'total': invoice.get('total')
+                'number': invoice.get('invoice_number'),
+                'nit': invoice.get('client_nit'),
+                'date': invoice.get('issue_date'),
+                'total': float(invoice.get('total_amount', 0))
             },
             'client': {
                 'name': client.get('name', 'N/A'),
@@ -653,7 +682,7 @@ def get_invoice_report(invoice_id):
                 'address': client.get('address', 'N/A'),
                 'email': client.get('email', 'N/A')
             },
-            'instances': instances_data
+            'instances': instances_list
         }
 
         # Generar PDF
@@ -698,13 +727,16 @@ def get_sales_report():
         filtered_invoices = []
 
         for invoice in invoices:
-            invoice_date_str = invoice.get('date', '')
+            invoice_date_str = invoice.get('issue_date', '')
             try:
                 invoice_date = datetime.strptime(invoice_date_str, '%d/%m/%Y')
                 if start_date <= invoice_date <= end_date:
                     filtered_invoices.append(invoice)
             except ValueError:
                 continue
+
+        if not filtered_invoices:
+            return jsonify({'error': 'No hay facturas en el rango de fechas seleccionado'}), 404
 
         # Analizar segun tipo
         if analysis_type == 'categories':
@@ -754,20 +786,29 @@ def analyze_by_categories(invoices, storage):
     """Analiza ventas por categorias y configuraciones"""
     category_revenue = {}
 
-    # Obtener consumos y clientes
-    consumptions = storage.get_consumptions()
-    clients = storage.get_clients()
+    # Obtener todos los datos necesarios
+    all_data = storage.get_all_data()
+    consumptions = all_data.get('consumptions', [])
 
     for invoice in invoices:
-        invoice_id = invoice.get('id')
-        invoice_consumptions = [
-            c for c in consumptions if c.get('invoice_id') == invoice_id]
+        # Obtener consumptions usando consumption_ids como indices
+        consumption_ids = invoice.get('consumption_ids', [])
+        
+        for cons_id_str in consumption_ids:
+            try:
+                cons_idx = int(cons_id_str)
+                if 0 <= cons_idx < len(consumptions):
+                    consumption = consumptions[cons_idx]
+                else:
+                    continue
+            except (ValueError, IndexError):
+                continue
 
-        for consumption in invoice_consumptions:
             instance_id = consumption.get('instance_id')
 
             # Buscar cliente e instancia
-            client_nit = invoice.get('nit')
+            client_nit = invoice.get('client_nit')
+            clients = all_data.get('clients', [])
             client = None
             for c in clients:
                 if c.get('nit') == client_nit:
@@ -787,7 +828,7 @@ def analyze_by_categories(invoices, storage):
                 continue
 
             # Obtener configuracion
-            config_id = instance.get('config_id')
+            config_id = instance.get('configuration_id')
             config = storage.get_configuration_by_id(config_id)
 
             if not config:
@@ -801,12 +842,12 @@ def analyze_by_categories(invoices, storage):
                 continue
 
             # Calcular ingresos
-            hours = float(consumption.get('hours', 0))
-            resources = storage.get_resources()
+            hours = float(consumption.get('time_hours', 0))
+            resources = all_data.get('resources', [])
             revenue = 0.0
 
             for res_config in config.get('resources', []):
-                resource_id = res_config.get('id')
+                resource_id = res_config.get('resource_id')
                 quantity = float(res_config.get('quantity', 0))
 
                 resource = None
@@ -816,8 +857,8 @@ def analyze_by_categories(invoices, storage):
                         break
 
                 if resource:
-                    cost_per_hour = float(resource.get('cost_per_hour', 0))
-                    revenue += quantity * cost_per_hour * hours
+                    value_per_hour = float(resource.get('value_per_hour', 0))
+                    revenue += quantity * value_per_hour * hours
 
             # Agregar a estadisticas
             key = f"{category.get('name', 'N/A')} - {config.get('name', 'N/A')}"
@@ -836,21 +877,30 @@ def analyze_by_resources(invoices, storage):
     """Analiza ventas por recursos"""
     resource_revenue = {}
 
-    # Obtener datos necesarios
-    consumptions = storage.get_consumptions()
-    clients = storage.get_clients()
-    resources = storage.get_resources()
+    # Obtener todos los datos necesarios
+    all_data = storage.get_all_data()
+    consumptions = all_data.get('consumptions', [])
+    resources = all_data.get('resources', [])
 
     for invoice in invoices:
-        invoice_id = invoice.get('id')
-        invoice_consumptions = [
-            c for c in consumptions if c.get('invoice_id') == invoice_id]
+        # Obtener consumptions usando consumption_ids como indices
+        consumption_ids = invoice.get('consumption_ids', [])
+        
+        for cons_id_str in consumption_ids:
+            try:
+                cons_idx = int(cons_id_str)
+                if 0 <= cons_idx < len(consumptions):
+                    consumption = consumptions[cons_idx]
+                else:
+                    continue
+            except (ValueError, IndexError):
+                continue
 
-        for consumption in invoice_consumptions:
             instance_id = consumption.get('instance_id')
 
             # Buscar cliente e instancia
-            client_nit = invoice.get('nit')
+            client_nit = invoice.get('client_nit')
+            clients = all_data.get('clients', [])
             client = None
             for c in clients:
                 if c.get('nit') == client_nit:
@@ -870,17 +920,17 @@ def analyze_by_resources(invoices, storage):
                 continue
 
             # Obtener configuracion
-            config_id = instance.get('config_id')
+            config_id = instance.get('configuration_id')
             config = storage.get_configuration_by_id(config_id)
 
             if not config:
                 continue
 
             # Calcular ingresos por recurso
-            hours = float(consumption.get('hours', 0))
+            hours = float(consumption.get('time_hours', 0))
 
             for res_config in config.get('resources', []):
-                resource_id = res_config.get('id')
+                resource_id = res_config.get('resource_id')
                 quantity = float(res_config.get('quantity', 0))
 
                 # Buscar recurso
@@ -891,8 +941,8 @@ def analyze_by_resources(invoices, storage):
                         break
 
                 if resource:
-                    cost_per_hour = float(resource.get('cost_per_hour', 0))
-                    revenue = quantity * cost_per_hour * hours
+                    value_per_hour = float(resource.get('value_per_hour', 0))
+                    revenue = quantity * value_per_hour * hours
 
                     # Agregar a estadisticas
                     key = resource.get('name', 'N/A')

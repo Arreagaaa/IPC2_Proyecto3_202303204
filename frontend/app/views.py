@@ -171,13 +171,20 @@ def billing(request):
 
             if response.status_code == 200:
                 data = response.json()
+                invoices = data.get('invoices', [])
+
+                # Calcular total de todas las facturas
+                total_amount = sum(inv.get('total_amount', 0)
+                                   for inv in invoices)
+
                 return render(request, 'billing_result.html', {
                     'success': True,
                     'message': data.get('message', ''),
-                    'invoices': data.get('invoices', []),
+                    'invoices': invoices,
                     'count': data.get('count', 0),
                     'start_date': start_date,
-                    'end_date': end_date
+                    'end_date': end_date,
+                    'total_amount': total_amount
                 })
             else:
                 return render(request, 'billing.html', {
@@ -275,8 +282,8 @@ def create_configuration(request):
 
             if categories_response.status_code == 200:
                 data = categories_response.json()
-                categories = data.get('data', {}).get('categories', [])
-                resources = data.get('data', {}).get('resources', [])
+                categories = data.get('categories', [])
+                resources = data.get('resources', [])
 
             return render(request, 'create_configuration.html', {
                 'categories': categories,
@@ -427,12 +434,19 @@ def create_instance(request):
     """Crear una nueva instancia"""
     if request.method == 'POST':
         try:
+            # Obtener fecha y convertir formato
+            start_date = request.POST.get('start_date')
+            # Convertir de YYYY-MM-DD a dd/mm/yyyy
+            from datetime import datetime
+            date_obj = datetime.strptime(start_date, '%Y-%m-%d')
+            start_date_formatted = date_obj.strftime('%d/%m/%Y')
+            
             data = {
                 'client_nit': request.POST.get('client_nit'),
                 'id': int(request.POST.get('id')),
                 'configuration_id': int(request.POST.get('configuration_id')),
                 'name': request.POST.get('name'),
-                'start_date': request.POST.get('start_date')
+                'start_date': start_date_formatted
             }
 
             response = requests.post(
@@ -475,10 +489,17 @@ def cancel_instance_view(request):
     """Cancelar una instancia existente"""
     if request.method == 'POST':
         try:
+            # Obtener fecha y convertir formato
+            end_date = request.POST.get('end_date')
+            # Convertir de YYYY-MM-DD a dd/mm/yyyy
+            from datetime import datetime
+            date_obj = datetime.strptime(end_date, '%Y-%m-%d')
+            end_date_formatted = date_obj.strftime('%d/%m/%Y')
+            
             data = {
                 'client_nit': request.POST.get('client_nit'),
                 'instance_id': int(request.POST.get('instance_id')),
-                'end_date': request.POST.get('end_date')
+                'end_date': end_date_formatted
             }
 
             response = requests.post(
@@ -642,13 +663,20 @@ def report_sales(request):
             })
 
         try:
+            # Convertir fechas de YYYY-MM-DD a dd/mm/yyyy
+            from datetime import datetime
+            start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
+            end_date_obj = datetime.strptime(end_date, '%Y-%m-%d')
+            start_date_formatted = start_date_obj.strftime('%d/%m/%Y')
+            end_date_formatted = end_date_obj.strftime('%d/%m/%Y')
+
             from django.http import HttpResponse
             response = requests.post(
                 f'{BACKEND_URL}/reporte/ventas',
                 json={
                     'type': analysis_type,
-                    'start_date': start_date,
-                    'end_date': end_date
+                    'start_date': start_date_formatted,
+                    'end_date': end_date_formatted
                 },
                 timeout=30
             )

@@ -285,14 +285,14 @@
             <div class="text-sm text-slate-400 mb-2">
               <span class="mr-4"
                 >Usuario:
-                <strong class="text-white">{{ client.username }}</strong></span
+                <strong class="text-white">{{ client.username|default:"N/A" }}</strong></span
               >
               <span
                 >Email:
-                <strong class="text-white">{{ client.email }}</strong></span
+                <strong class="text-white">{{ client.email|default:"N/A" }}</strong></span
               >
             </div>
-            <p class="text-sm text-slate-500 mb-3">{{ client.address }}</p>
+            <p class="text-sm text-slate-500 mb-3">{{ client.address|default:"N/A" }}</p>
 
             {% if client.instances %}
             <div class="ml-4">
@@ -313,8 +313,8 @@
                       Configuración ID: {{ instance.configuration_id }}
                     </div>
                     <div class="text-xs text-slate-500 mt-1">
-                      Inicio: {{ instance.start_date }} {% if instance.end_date
-                      %} | Fin: {{ instance.end_date }}{% endif %}
+                      Inicio: {{ instance.start_date }}
+                      {% if instance.end_date %} | Fin: {{ instance.end_date }}{% endif %}
                     </div>
                   </div>
                   <span

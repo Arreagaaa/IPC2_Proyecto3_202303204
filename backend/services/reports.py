@@ -106,19 +106,54 @@ def generate_invoice_detail_pdf(invoice_data):
     for instance in instances:
         # Encabezado de instancia
         instance_header = Paragraph(
-            f"<b>Instancia:</b> {instance.get('instance_name', 'N/A')} (ID: {instance.get('instance_id', 'N/A')})", normal_style)
+            f"<b>Instancia:</b> {instance.get('instance_name', 'N/A')} (ID: {instance.get('instance_id', 'N/A')}) - <b>Configuración:</b> {instance.get('config_name', 'N/A')}", 
+            normal_style)
         elements.append(instance_header)
         elements.append(Spacer(1, 6))
+
+        # Mostrar consumos individuales con fecha/hora
+        consumptions = instance.get('consumptions', [])
+        if consumptions:
+            consumption_header = Paragraph("<b>Consumos registrados:</b>", normal_style)
+            elements.append(consumption_header)
+            elements.append(Spacer(1, 4))
+            
+            consumption_data = [["Fecha/Hora", "Tiempo (horas)"]]
+            for consumption in consumptions:
+                consumption_data.append([
+                    consumption.get('date_time', 'N/A'),
+                    f"{consumption.get('time_hours', 0.0):.2f}"
+                ])
+            
+            consumption_table = Table(consumption_data, colWidths=[4*inch, 2*inch])
+            consumption_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#f1f5f9')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor('#475569')),
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('ALIGN', (1, 0), (1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 9),
+                ('FONTSIZE', (0, 1), (-1, -1), 8),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+                ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#cbd5e1')),
+            ]))
+            elements.append(consumption_table)
+            elements.append(Spacer(1, 10))
 
         # Tabla de recursos de la instancia
         resources = instance.get('resources', [])
         if resources:
-            resource_data = [["Recurso", "Cantidad",
-                              "Costo/Hora", "Horas", "Subtotal"]]
+            resource_header = Paragraph("<b>Detalle de recursos:</b>", normal_style)
+            elements.append(resource_header)
+            elements.append(Spacer(1, 4))
+            
+            resource_data = [["Recurso", "Abrev.", "Cantidad",
+                              "Costo/Hora", "Horas Total", "Subtotal"]]
 
             for resource in resources:
                 resource_data.append([
                     resource.get('name', 'N/A'),
+                    resource.get('abbreviation', 'N/A'),
                     str(resource.get('quantity', 0)),
                     f"${resource.get('cost_per_hour', 0.0):.2f}",
                     f"{resource.get('hours', 0.0):.2f}",
@@ -126,15 +161,15 @@ def generate_invoice_detail_pdf(invoice_data):
                 ])
 
             resource_table = Table(resource_data, colWidths=[
-                                   2*inch, 1*inch, 1*inch, 1*inch, 1*inch])
+                                   1.5*inch, 0.8*inch, 0.8*inch, 1*inch, 1*inch, 1*inch])
             resource_table.setStyle(TableStyle([
                 ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#e2e8f0')),
                 ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor('#1e293b')),
                 ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, 0), 10),
-                ('FONTSIZE', (0, 1), (-1, -1), 9),
-                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('FONTSIZE', (0, 0), (-1, 0), 9),
+                ('FONTSIZE', (0, 1), (-1, -1), 8),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
                 ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#cbd5e1')),
             ]))
             elements.append(resource_table)

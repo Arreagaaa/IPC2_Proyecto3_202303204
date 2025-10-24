@@ -102,9 +102,8 @@
             >
               <option value="">-- Seleccione una factura --</option>
               {% for invoice in invoices %}
-              <option value="{{ invoice.id }}">
-                {{ invoice.id }} - {{ invoice.nit }} - ${{ invoice.total }} ({{
-                invoice.date }})
+              <option value="{{ invoice.invoice_number }}">
+                {{ invoice.invoice_number }} - {{ invoice.client_nit }} - ${{ invoice.total_amount }} ({{ invoice.issue_date }})
               </option>
               {% endfor %}
             </select>
@@ -223,12 +222,12 @@
                 class="border-b border-slate-700 hover:bg-slate-700/50 transition-colors"
               >
                 <td class="py-3 px-4 text-slate-100 font-mono">
-                  {{ invoice.id }}
+                  {{ invoice.invoice_number }}
                 </td>
-                <td class="py-3 px-4 text-slate-200">{{ invoice.nit }}</td>
-                <td class="py-3 px-4 text-slate-200">{{ invoice.date }}</td>
+                <td class="py-3 px-4 text-slate-200">{{ invoice.client_nit }}</td>
+                <td class="py-3 px-4 text-slate-200">{{ invoice.issue_date }}</td>
                 <td class="py-3 px-4 text-right text-green-400 font-semibold">
-                  ${{ invoice.total }}
+                  ${{ invoice.total_amount }}
                 </td>
               </tr>
               {% endfor %}

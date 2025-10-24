@@ -522,7 +522,8 @@ class XMLStorage:
                 config_resources = []
                 for res_node in config_node.findall('.//resources/resource'):
                     config_resources.append({
-                        'id': res_node.get('id'),
+                        # Cambio de 'id' a 'resource_id'
+                        'resource_id': res_node.get('id'),
                         'quantity': float(res_node.text) if res_node.text else 0.0
                     })
 
