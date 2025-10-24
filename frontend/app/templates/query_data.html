@@ -11,11 +11,23 @@
     <nav class="bg-slate-800 border-b border-slate-700 shadow-lg">
       <div class="container mx-auto px-6 py-4">
         <div class="flex items-center space-x-3">
-          <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          <svg
+            class="w-8 h-8 text-blue-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            ></path>
           </svg>
           <div>
-            <h1 class="text-xl font-bold text-white">Tecnologías Chapinas S.A.</h1>
+            <h1 class="text-xl font-bold text-white">
+              Tecnologías Chapinas S.A.
+            </h1>
             <p class="text-sm text-slate-400">Consultar Datos del Sistema</p>
           </div>
         </div>
@@ -26,9 +38,22 @@
     <div class="container mx-auto px-6 py-8">
       <div class="max-w-6xl mx-auto">
         <!-- Back Button -->
-        <a href="/" class="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6 transition-colors">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        <a
+          href="/"
+          class="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6 transition-colors"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            ></path>
           </svg>
           Regresar al inicio
         </a>
@@ -39,42 +64,54 @@
 
         {% if success %}
         <!-- Summary -->
-        <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6 mb-6">
-          <h3 class="text-xl font-bold text-white mb-4">
-            Resumen del Sistema
-          </h3>
+        <div
+          class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6 mb-6"
+        >
+          <h3 class="text-xl font-bold text-white mb-4">Resumen del Sistema</h3>
           <div class="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <div class="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 text-center">
+            <div
+              class="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 text-center"
+            >
               <div class="text-3xl font-bold text-blue-400">
                 {{ data.summary.resources }}
               </div>
               <div class="text-sm text-slate-400 mt-1">Recursos</div>
             </div>
-            <div class="bg-green-500/10 border border-green-500/20 rounded-lg p-4 text-center">
+            <div
+              class="bg-green-500/10 border border-green-500/20 rounded-lg p-4 text-center"
+            >
               <div class="text-3xl font-bold text-green-400">
                 {{ data.summary.categories }}
               </div>
               <div class="text-sm text-slate-400 mt-1">Categorías</div>
             </div>
-            <div class="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4 text-center">
+            <div
+              class="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4 text-center"
+            >
               <div class="text-3xl font-bold text-purple-400">
                 {{ data.summary.configurations }}
               </div>
               <div class="text-sm text-slate-400 mt-1">Configuraciones</div>
             </div>
-            <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 text-center">
+            <div
+              class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 text-center"
+            >
               <div class="text-3xl font-bold text-yellow-400">
                 {{ data.summary.clients }}
               </div>
               <div class="text-sm text-slate-400 mt-1">Clientes</div>
             </div>
-            <div class="bg-red-500/10 border border-red-500/20 rounded-lg p-4 text-center">
+            <div
+              class="bg-red-500/10 border border-red-500/20 rounded-lg p-4 text-center"
+            >
               <div class="text-3xl font-bold text-red-400">
                 {{ data.summary.instances }}
               </div>
               <div class="text-sm text-slate-400 mt-1">Instancias</div>
             </div>
-            <div class="bg-indigo-500/10 border border-indigo-500/20 rounded-lg p-4 text-center">
+            <div
+              class="bg-indigo-500/10 border border-indigo-500/20 rounded-lg p-4 text-center"
+            >
               <div class="text-3xl font-bold text-indigo-400">
                 {{ data.summary.consumptions }}
               </div>
@@ -85,33 +122,75 @@
 
         <!-- Resources -->
         {% if data.resources %}
-        <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6 mb-6">
+        <div
+          class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6 mb-6"
+        >
           <h3 class="text-xl font-bold text-white mb-4">Recursos</h3>
           <div class="overflow-x-auto">
             <table class="min-w-full">
               <thead class="bg-slate-700">
                 <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">ID</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">Nombre</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">Abreviatura</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">Métrica</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">Tipo</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">Valor/Hora</th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase"
+                  >
+                    ID
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase"
+                  >
+                    Nombre
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase"
+                  >
+                    Abreviatura
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase"
+                  >
+                    Métrica
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase"
+                  >
+                    Tipo
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase"
+                  >
+                    Valor/Hora
+                  </th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-700">
                 {% for resource in data.resources %}
                 <tr class="hover:bg-slate-700/50">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ resource.id }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ resource.name }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{{ resource.abbreviation }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{{ resource.metric }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+                    {{ resource.id }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+                    {{ resource.name }}
+                  </td>
+                  <td
+                    class="px-6 py-4 whitespace-nowrap text-sm text-slate-300"
+                  >
+                    {{ resource.abbreviation }}
+                  </td>
+                  <td
+                    class="px-6 py-4 whitespace-nowrap text-sm text-slate-300"
+                  >
+                    {{ resource.metric }}
+                  </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {% if resource.type == 'Hardware' %}bg-blue-500/20 text-blue-400{% else %}bg-green-500/20 text-green-400{% endif %}">
+                    <span
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {% if resource.type == 'Hardware' %}bg-blue-500/20 text-blue-400{% else %}bg-green-500/20 text-green-400{% endif %}"
+                    >
                       {{ resource.type }}
                     </span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-white">${{ resource.value_per_hour }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+                    ${{ resource.value_per_hour }}
+                  </td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -122,17 +201,27 @@
 
         <!-- Categories -->
         {% if data.categories %}
-        <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6 mb-6">
+        <div
+          class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6 mb-6"
+        >
           <h3 class="text-xl font-bold text-white mb-4">
             Categorías y Configuraciones
           </h3>
           {% for category in data.categories %}
-          <div class="mb-6 border-l-4 border-indigo-500 bg-indigo-500/10 pl-4 py-2">
+          <div
+            class="mb-6 border-l-4 border-indigo-500 bg-indigo-500/10 pl-4 py-2"
+          >
             <div class="mb-2">
-              <span class="text-lg font-semibold text-white">{{ category.name }}</span>
-              <span class="ml-2 text-sm text-slate-400">(ID: {{ category.id }})</span>
+              <span class="text-lg font-semibold text-white"
+                >{{ category.name }}</span
+              >
+              <span class="ml-2 text-sm text-slate-400"
+                >(ID: {{ category.id }})</span
+              >
             </div>
-            <p class="text-sm text-slate-400 mb-2">{{ category.description }}</p>
+            <p class="text-sm text-slate-400 mb-2">
+              {{ category.description }}
+            </p>
             <p class="text-sm text-slate-500 italic mb-3">
               Carga de trabajo: {{ category.workload }}
             </p>
@@ -146,7 +235,9 @@
               <div class="bg-slate-700 rounded-lg p-3 mb-2">
                 <div class="font-medium text-white">
                   {{ config.name }}
-                  <span class="text-xs text-slate-400">(ID: {{ config.id }})</span>
+                  <span class="text-xs text-slate-400"
+                    >(ID: {{ config.id }})</span
+                  >
                 </div>
                 <div class="text-sm text-slate-400">
                   {{ config.description }}
@@ -154,7 +245,9 @@
                 {% if config.resources %}
                 <div class="mt-2 text-xs text-slate-400">
                   Recursos: {% for res in config.resources %}
-                  <span class="inline-block bg-blue-500/20 text-blue-400 px-2 py-1 rounded mr-1">
+                  <span
+                    class="inline-block bg-blue-500/20 text-blue-400 px-2 py-1 rounded mr-1"
+                  >
                     Recurso {{ res.resource_id }}: {{ res.quantity }}
                   </span>
                   {% endfor %}
@@ -171,19 +264,33 @@
 
         <!-- Clients -->
         {% if data.clients %}
-        <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6 mb-6">
+        <div
+          class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6 mb-6"
+        >
           <h3 class="text-xl font-bold text-white mb-4">
             Clientes e Instancias
           </h3>
           {% for client in data.clients %}
-          <div class="mb-6 border-l-4 border-yellow-500 bg-yellow-500/10 pl-4 py-2">
+          <div
+            class="mb-6 border-l-4 border-yellow-500 bg-yellow-500/10 pl-4 py-2"
+          >
             <div class="mb-2">
-              <span class="text-lg font-semibold text-white">{{ client.name }}</span>
-              <span class="ml-2 text-sm text-slate-400">(NIT: {{ client.nit }})</span>
+              <span class="text-lg font-semibold text-white"
+                >{{ client.name }}</span
+              >
+              <span class="ml-2 text-sm text-slate-400"
+                >(NIT: {{ client.nit }})</span
+              >
             </div>
             <div class="text-sm text-slate-400 mb-2">
-              <span class="mr-4">Usuario: <strong class="text-white">{{ client.username }}</strong></span>
-              <span>Email: <strong class="text-white">{{ client.email }}</strong></span>
+              <span class="mr-4"
+                >Usuario:
+                <strong class="text-white">{{ client.username }}</strong></span
+              >
+              <span
+                >Email:
+                <strong class="text-white">{{ client.email }}</strong></span
+              >
             </div>
             <p class="text-sm text-slate-500 mb-3">{{ client.address }}</p>
 
@@ -198,17 +305,21 @@
                   <div>
                     <div class="font-medium text-white">
                       {{ instance.name }}
-                      <span class="text-xs text-slate-400">(ID: {{ instance.id }})</span>
+                      <span class="text-xs text-slate-400"
+                        >(ID: {{ instance.id }})</span
+                      >
                     </div>
                     <div class="text-sm text-slate-400">
                       Configuración ID: {{ instance.configuration_id }}
                     </div>
                     <div class="text-xs text-slate-500 mt-1">
-                      Inicio: {{ instance.start_date }}
-                      {% if instance.end_date %} | Fin: {{ instance.end_date }}{% endif %}
+                      Inicio: {{ instance.start_date }} {% if instance.end_date
+                      %} | Fin: {{ instance.end_date }}{% endif %}
                     </div>
                   </div>
-                  <span class="px-2 py-1 text-xs font-semibold rounded {% if instance.status == 'Vigente' %}bg-green-500/20 text-green-400{% else %}bg-red-500/20 text-red-400{% endif %}">
+                  <span
+                    class="px-2 py-1 text-xs font-semibold rounded {% if instance.status == 'Vigente' %}bg-green-500/20 text-green-400{% else %}bg-red-500/20 text-red-400{% endif %}"
+                  >
                     {{ instance.status }}
                   </span>
                 </div>
@@ -223,7 +334,9 @@
 
         <!-- Consumptions -->
         {% if data.consumptions %}
-        <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6 mb-6">
+        <div
+          class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6 mb-6"
+        >
           <h3 class="text-xl font-bold text-white mb-4">
             Consumos Registrados
           </h3>
@@ -231,19 +344,45 @@
             <table class="min-w-full">
               <thead class="bg-slate-700">
                 <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">NIT Cliente</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">ID Instancia</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">Horas</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase">Fecha/Hora</th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase"
+                  >
+                    NIT Cliente
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase"
+                  >
+                    ID Instancia
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase"
+                  >
+                    Horas
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase"
+                  >
+                    Fecha/Hora
+                  </th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-700">
                 {% for consumption in data.consumptions %}
                 <tr class="hover:bg-slate-700/50">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ consumption.nit }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ consumption.instance_id }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ consumption.time_hours }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{{ consumption.date_time }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+                    {{ consumption.nit }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+                    {{ consumption.instance_id }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+                    {{ consumption.time_hours }}
+                  </td>
+                  <td
+                    class="px-6 py-4 whitespace-nowrap text-sm text-slate-300"
+                  >
+                    {{ consumption.date_time }}
+                  </td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -254,8 +393,16 @@
         <!-- Error -->
         <div class="bg-red-500/10 border-l-4 border-red-500 p-4 rounded">
           <div class="flex">
-            <svg class="h-6 w-6 text-red-400 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            <svg
+              class="h-6 w-6 text-red-400 flex-shrink-0"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clip-rule="evenodd"
+              />
             </svg>
             <div class="ml-3">
               <p class="text-sm text-red-300">

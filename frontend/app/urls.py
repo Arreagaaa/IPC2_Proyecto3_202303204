@@ -14,10 +14,18 @@ urlpatterns = [
     path('facturar/', views.billing, name='billing'),
     path('crear/recurso/', views.create_resource, name='create_resource'),
     path('crear/categoria/', views.create_category, name='create_category'),
+    path('crear/configuracion/', views.create_configuration,
+         name='create_configuration'),
     path('crear/cliente/', views.create_client, name='create_client'),
     path('crear/instancia/', views.create_instance, name='create_instance'),
     path('cancelar/instancia/', views.cancel_instance_view, name='cancel_instance'),
     path('facturas/', views.view_invoices, name='view_invoices'),
     path('consumos-pendientes/', views.pending_consumptions,
          name='pending_consumptions'),
+
+    # Nuevas rutas Semana 4 - Reportes
+    path('reporte/factura/', views.report_invoice, name='report_invoice'),
+    path('reporte/ventas/', views.report_sales, name='report_sales'),
+    path('ayuda/', views.help_page, name='help'),
+    path('documentacion/', views.documentation_page, name='documentation'),
 ]

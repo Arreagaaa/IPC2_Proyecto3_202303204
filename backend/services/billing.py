@@ -8,9 +8,8 @@ class BillingService:
         self.storage = storage
 
     def parse_date(self, date_str: str) -> datetime:
-        """
-        Convierte string de fecha en formato dd/mm/yyyy a datetime
-        """
+        # Convierte string de fecha en formato dd/mm/yyyy a datetime
+
         try:
             return datetime.strptime(date_str.strip(), '%d/%m/%Y')
         except ValueError:
@@ -22,9 +21,7 @@ class BillingService:
                 raise ValueError(f"Formato de fecha inválido: {date_str}")
 
     def is_date_in_range(self, date_str: str, start_date: str, end_date: str) -> bool:
-        """
-        Verifica si una fecha está dentro de un rango
-        """
+        # Verifica si una fecha está dentro de un rango
         try:
             date = self.parse_date(date_str)
             start = self.parse_date(start_date)
@@ -34,10 +31,7 @@ class BillingService:
             return False
 
     def calculate_consumption_cost(self, consumption: Dict) -> Tuple[float, Dict]:
-        """
-        Calcula el costo de un consumo individual
-        Retorna: (costo_total, detalle_por_recurso)
-        """
+        # Calcula el costo de un consumo individual y retorna: (costo_total, detalle_por_recurso)
         # Obtener instancia
         instance = self.storage.get_instance_by_id(
             consumption['nit'], consumption['instance_id'])
@@ -75,10 +69,8 @@ class BillingService:
         return total_cost, resource_details
 
     def generate_invoices(self, start_date: str, end_date: str) -> List[Dict]:
-        """
-        Genera facturas para todos los clientes según consumos en el rango de fechas
-        Retorna lista de facturas generadas
-        """
+        # Genera facturas para todos los clientes según consumos en el rango de fechas
+        # Retorna lista de facturas generadas
         # Obtener consumos no facturados
         unbilled = self.storage.get_unbilled_consumptions()
 
@@ -147,9 +139,7 @@ class BillingService:
         return invoices
 
     def get_invoice_detail(self, invoice_number: str) -> Dict:
-        """
-        Obtiene el detalle completo de una factura
-        """
+        # Obtiene el detalle completo de una factura
         invoices = self.storage.get_invoices()
 
         for invoice in invoices:

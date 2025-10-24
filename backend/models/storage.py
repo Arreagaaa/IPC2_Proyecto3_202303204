@@ -91,6 +91,46 @@ class XMLStorage:
 
         self.save_tree(tree)
 
+    def add_configuration_to_category(self, category_id: int, configuration: Configuration):
+
+        # Agrega una configuracion a una categoria existente
+
+        tree = self.load_tree()
+        root = tree.getroot()
+
+        # Buscar la categoria
+        cat_node = root.find(f".//categories/category[@id='{category_id}']")
+        if cat_node is None:
+            raise ValueError(f'Categoria con ID {category_id} no encontrada')
+
+        # Buscar el nodo de configuraciones
+        configs_node = cat_node.find('configurations')
+        if configs_node is None:
+            configs_node = ET.SubElement(cat_node, 'configurations')
+
+        # Verificar si ya existe una configuracion con este ID
+        existing_config = configs_node.find(
+            f".//configuration[@id='{configuration.id}']")
+        if existing_config is not None:
+            raise ValueError(
+                f'Ya existe una configuración con ID {configuration.id} en esta categoría')
+
+        # Crear el nodo de configuracion
+        config_node = ET.SubElement(configs_node, 'configuration')
+        config_node.set('id', str(configuration.id))
+        ET.SubElement(config_node, 'name').text = configuration.name
+        ET.SubElement(
+            config_node, 'description').text = configuration.description or ''
+
+        # Agregar recursos
+        resources_node = ET.SubElement(config_node, 'resources')
+        for config_res in configuration.resources:
+            res_node = ET.SubElement(resources_node, 'resource')
+            res_node.set('id', str(config_res.resource_id))
+            res_node.text = str(config_res.quantity)
+
+        self.save_tree(tree)
+
     def add_clients(self, clients: List[Client]):
         # Agregar clientes con instancias a la base de datos
         tree = self.load_tree()
@@ -172,10 +212,9 @@ class XMLStorage:
         }
 
     def clear_all(self):
-        """
-        Limpia todos los datos de la base de datos
-        Reinicia la estructura XML a su estado inicial
-        """
+
+        # Limpia todos los datos de la base de datos y reinicia la estructura XML a su estado inicial
+
         root = ET.Element('database')
         ET.SubElement(root, 'resources')
         ET.SubElement(root, 'categories')
@@ -186,10 +225,9 @@ class XMLStorage:
         tree.write(self.db_path, encoding='utf-8', xml_declaration=True)
 
     def get_all_data(self) -> Dict:
-        """
-        Obtiene todos los datos almacenados en formato estructurado
-        Retorna diccionario con recursos, categorías, clientes, consumos
-        """
+
+        # Obtiene todos los datos almacenados en formato estructurado retorna diccionario con recursos, categorías, clientes, consumos
+
         tree = self.load_tree()
         root = tree.getroot()
 
@@ -277,10 +315,10 @@ class XMLStorage:
         }
 
     def add_invoice(self, invoice_number: str, client_nit: str, issue_date: str, total_amount: float, consumption_ids: List[str]):
-        """
-        Agrega una factura a la base de datos
-        Marca los consumos como facturados
-        """
+
+        # Agrega una factura a la base de datos
+        # Marca los consumos como facturados
+
         tree = self.load_tree()
         root = tree.getroot()
         invoices_node = root.find('invoices')
@@ -317,9 +355,9 @@ class XMLStorage:
         self.save_tree(tree)
 
     def get_unbilled_consumptions(self):
-        """
-        Obtiene todos los consumos que no han sido facturados
-        """
+
+        # Obtiene todos los consumos que no han sido facturados
+
         tree = self.load_tree()
         root = tree.getroot()
 
@@ -337,9 +375,9 @@ class XMLStorage:
         return consumptions
 
     def get_resources(self):
-        """
-        Obtiene todos los recursos del sistema
-        """
+
+        # Obtiene todos los recursos del sistema
+
         tree = self.load_tree()
         root = tree.getroot()
 
@@ -359,9 +397,9 @@ class XMLStorage:
         return resources
 
     def get_clients(self):
-        """
-        Obtiene todos los clientes con sus instancias
-        """
+
+        # Obtiene todos los clientes con sus instancias
+
         tree = self.load_tree()
         root = tree.getroot()
 
@@ -390,9 +428,9 @@ class XMLStorage:
         return clients
 
     def get_invoices(self):
-        """
-        Obtiene todas las facturas registradas
-        """
+
+        # Obtiene todas las facturas registradas
+
         tree = self.load_tree()
         root = tree.getroot()
 
@@ -414,10 +452,10 @@ class XMLStorage:
         return invoices
 
     def cancel_instance(self, client_nit: str, instance_id: str, end_date: str):
-        """
-        Cancela una instancia específica de un cliente
-        Cambia el estado a 'Cancelada' y establece la fecha final
-        """
+
+        # Cancela una instancia específica de un cliente
+        # Cambia el estado a 'Cancelada' y establece la fecha final
+
         tree = self.load_tree()
         root = tree.getroot()
 
@@ -450,9 +488,9 @@ class XMLStorage:
         self.save_tree(tree)
 
     def get_resource_by_id(self, resource_id: str):
-        """
-        Obtiene un recurso por su ID
-        """
+
+        # Obtiene un recurso por su ID
+
         tree = self.load_tree()
         root = tree.getroot()
 
@@ -466,13 +504,14 @@ class XMLStorage:
             'abbreviation': res_node.find('abbreviation').text if res_node.find('abbreviation') is not None else '',
             'metric': res_node.find('metric').text if res_node.find('metric') is not None else '',
             'type': res_node.find('type').text if res_node.find('type') is not None else '',
-            'value_per_hour': float(res_node.find('value_per_hour').text) if res_node.find('value_per_hour') is not None else 0.0
+            'value_per_hour': float(res_node.find('value_per_hour').text) if res_node.find('value_per_hour') is not None else 0.0,
+            'cost_per_hour': float(res_node.find('value_per_hour').text) if res_node.find('value_per_hour') is not None else 0.0
         }
 
     def get_configuration_by_id(self, config_id: str):
-        """
-        Obtiene una configuración por su ID (buscando en todas las categorías)
-        """
+
+        # Obtiene una configuración por su ID (buscando en todas las categorías)
+
         tree = self.load_tree()
         root = tree.getroot()
 
@@ -483,7 +522,7 @@ class XMLStorage:
                 config_resources = []
                 for res_node in config_node.findall('.//resources/resource'):
                     config_resources.append({
-                        'resource_id': res_node.get('id'),
+                        'id': res_node.get('id'),
                         'quantity': float(res_node.text) if res_node.text else 0.0
                     })
 
@@ -491,15 +530,34 @@ class XMLStorage:
                     'id': config_node.get('id'),
                     'name': config_node.find('name').text if config_node.find('name') is not None else '',
                     'description': config_node.find('description').text if config_node.find('description') is not None else '',
-                    'resources': config_resources
+                    'resources': config_resources,
+                    'category_id': cat_node.get('id')
                 }
 
         return None
 
+    def get_category_by_id(self, category_id: str):
+
+        # Obtiene una categoria por su ID
+
+        tree = self.load_tree()
+        root = tree.getroot()
+
+        cat_node = root.find(f".//categories/category[@id='{category_id}']")
+        if cat_node is None:
+            return None
+
+        return {
+            'id': cat_node.get('id'),
+            'name': cat_node.find('name').text if cat_node.find('name') is not None else '',
+            'description': cat_node.find('description').text if cat_node.find('description') is not None else '',
+            'workload': cat_node.find('workload').text if cat_node.find('workload') is not None else ''
+        }
+
     def get_instance_by_id(self, client_nit: str, instance_id: str):
-        """
-        Obtiene una instancia específica de un cliente
-        """
+
+        # Obtiene una instancia específica de un cliente
+
         tree = self.load_tree()
         root = tree.getroot()
 

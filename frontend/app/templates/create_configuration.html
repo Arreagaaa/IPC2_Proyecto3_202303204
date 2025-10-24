@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crear Configuración - Tecnologías Chapinas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-900 text-slate-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+      <!-- Header -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-4">
+            <a
+              href="{% url 'index' %}"
+              class="text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              <svg
+                class="w-8 h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+            </a>
+            <h1 class="text-3xl font-bold text-slate-100">
+              Crear Configuración
+            </h1>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg
+              class="w-8 h-8 text-green-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+        </div>
+        <p class="text-slate-400">
+          Agregue una nueva configuración a una categoría existente
+        </p>
+      </div>
+
+      <!-- Error Message -->
+      {% if error %}
+      <div
+        class="mb-6 bg-red-900/50 border border-red-700 rounded-lg p-4 flex items-start space-x-3"
+      >
+        <svg
+          class="w-6 h-6 text-red-400 flex-shrink-0 mt-0.5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <div>
+          <h3 class="font-semibold text-red-300">Error</h3>
+          <p class="text-red-200">{{ error }}</p>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Form Card -->
+      <div
+        class="bg-slate-800 rounded-lg shadow-xl border border-slate-700 p-6"
+      >
+        <form
+          method="POST"
+          action="{% url 'create_configuration' %}"
+          id="configForm"
+        >
+          {% csrf_token %}
+
+          <!-- Basic Info -->
+          <div class="mb-6">
+            <h3
+              class="text-lg font-semibold text-slate-100 mb-4 flex items-center space-x-2"
+            >
+              <svg
+                class="w-5 h-5 text-green-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>Información Básica</span>
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Category Selection -->
+              <div>
+                <label
+                  for="category_id"
+                  class="block text-sm font-medium text-slate-300 mb-2"
+                >
+                  Categoría *
+                </label>
+                <select
+                  id="category_id"
+                  name="category_id"
+                  required
+                  class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  <option value="">-- Seleccione una categoría --</option>
+                  {% for category in categories %}
+                  <option value="{{ category.id }}">{{ category.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- Configuration ID -->
+              <div>
+                <label
+                  for="config_id"
+                  class="block text-sm font-medium text-slate-300 mb-2"
+                >
+                  ID de Configuración *
+                </label>
+                <input
+                  type="number"
+                  id="config_id"
+                  name="config_id"
+                  required
+                  min="1"
+                  class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Ej: 1"
+                />
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <!-- Configuration Name -->
+              <div class="mb-4">
+                <label
+                  for="config_name"
+                  class="block text-sm font-medium text-slate-300 mb-2"
+                >
+                  Nombre de Configuración *
+                </label>
+                <input
+                  type="text"
+                  id="config_name"
+                  name="config_name"
+                  required
+                  class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Ej: Dev Basic"
+                />
+              </div>
+
+              <!-- Configuration Description -->
+              <div>
+                <label
+                  for="config_description"
+                  class="block text-sm font-medium text-slate-300 mb-2"
+                >
+                  Descripción
+                </label>
+                <textarea
+                  id="config_description"
+                  name="config_description"
+                  rows="3"
+                  class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Descripción de la configuración..."
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resources Section -->
+          <div class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3
+                class="text-lg font-semibold text-slate-100 flex items-center space-x-2"
+              >
+                <svg
+                  class="w-5 h-5 text-blue-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                  />
+                </svg>
+                <span>Recursos de la Configuración</span>
+              </h3>
+              <button
+                type="button"
+                onclick="addResource()"
+                class="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                <span>Agregar Recurso</span>
+              </button>
+            </div>
+
+            <!-- Resources Container -->
+            <div id="resourcesContainer" class="space-y-3">
+              <!-- Initial resource row -->
+              <div
+                class="resource-row flex items-center space-x-3 bg-slate-700 p-4 rounded-lg"
+              >
+                <div class="flex-1">
+                  <select
+                    name="resource_0_id"
+                    required
+                    class="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded-lg text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">-- Seleccione recurso --</option>
+                    {% for resource in resources %}
+                    <option value="{{ resource.id }}">
+                      {{ resource.name }} ({{ resource.metric }})
+                    </option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="w-32">
+                  <input
+                    type="number"
+                    name="resource_0_quantity"
+                    required
+                    min="0.01"
+                    step="0.01"
+                    placeholder="Cantidad"
+                    class="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded-lg text-slate-100 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onclick="removeResource(this)"
+                  class="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <p class="mt-3 text-sm text-slate-400">
+              Agregue los recursos que formará parte de esta configuración con
+              sus cantidades
+            </p>
+          </div>
+
+          <!-- Info Box -->
+          <div
+            class="mb-6 bg-blue-900/30 border border-blue-700 rounded-lg p-4"
+          >
+            <div class="flex items-start space-x-3">
+              <svg
+                class="w-6 h-6 text-blue-400 flex-shrink-0 mt-0.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <div class="text-sm">
+                <h4 class="font-semibold text-blue-300 mb-1">Ejemplo</h4>
+                <p class="text-blue-200">
+                  Una configuración "Dev Basic" podría incluir: 4 GiB de RAM + 2
+                  Núcleos de CPU. Los clientes pueden crear instancias basadas
+                  en esta configuración.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex items-center space-x-4">
+            <button
+              type="submit"
+              class="flex items-center space-x-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              <span>Crear Configuración</span>
+            </button>
+
+            <a
+              href="{% url 'index' %}"
+              class="flex items-center space-x-2 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-slate-100 rounded-lg transition-colors font-medium"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+              <span>Cancelar</span>
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      let resourceIndex = 1;
+
+      // Build resources options from Django template
+      const resourcesOptions = [
+        '<option value="">-- Seleccione recurso --</option>',
+        {% for resource in resources %}
+        '<option value="{{ resource.id }}">{{ resource.name }} ({{ resource.metric }})</option>'{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ].join('');
+
+      function addResource() {
+          const container = document.getElementById('resourcesContainer');
+          const newRow = document.createElement('div');
+          newRow.className = 'resource-row flex items-center space-x-3 bg-slate-700 p-4 rounded-lg';
+
+          newRow.innerHTML = `
+              <div class="flex-1">
+                  <select
+                      name="resource_${resourceIndex}_id"
+                      required
+                      class="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded-lg text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                      ${resourcesOptions}
+                  </select>
+              </div>
+              <div class="w-32">
+                  <input
+                      type="number"
+                      name="resource_${resourceIndex}_quantity"
+                      required
+                      min="0.01"
+                      step="0.01"
+                      placeholder="Cantidad"
+                      class="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded-lg text-slate-100 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+              </div>
+              <button
+                  type="button"
+                  onclick="removeResource(this)"
+                  class="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+              >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+              </button>
+          `;
+
+          container.appendChild(newRow);
+          resourceIndex++;
+      }
+
+      function removeResource(button) {
+          const container = document.getElementById('resourcesContainer');
+          const rows = container.getElementsByClassName('resource-row');
+
+          if (rows.length > 1) {
+              button.closest('.resource-row').remove();
+          } else {
+              alert('Debe haber al menos un recurso en la configuración');
+          }
+      }
+    </script>
+  </body>
+</html>

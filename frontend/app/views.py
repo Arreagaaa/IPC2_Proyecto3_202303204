@@ -264,6 +264,128 @@ def create_category(request):
     return render(request, 'create_category.html')
 
 
+def create_configuration(request):
+    """Crear una nueva configuración dentro de una categoría"""
+    if request.method == 'GET':
+        # Obtener categorías y recursos para los selectores
+        try:
+            categories_response = requests.get(f'{BACKEND_URL}/consultar')
+            categories = []
+            resources = []
+
+            if categories_response.status_code == 200:
+                data = categories_response.json()
+                categories = data.get('data', {}).get('categories', [])
+                resources = data.get('data', {}).get('resources', [])
+
+            return render(request, 'create_configuration.html', {
+                'categories': categories,
+                'resources': resources
+            })
+        except Exception as e:
+            return render(request, 'create_configuration.html', {
+                'error': str(e),
+                'categories': [],
+                'resources': []
+            })
+
+    elif request.method == 'POST':
+        try:
+            # Obtener datos del formulario
+            category_id = int(request.POST.get('category_id'))
+            config_id = int(request.POST.get('config_id'))
+            config_name = request.POST.get('config_name')
+            config_description = request.POST.get('config_description', '')
+
+            # Procesar recursos (formato: resource_X_id y resource_X_quantity)
+            resources = []
+            resource_index = 0
+            while True:
+                resource_id_key = f'resource_{resource_index}_id'
+                resource_qty_key = f'resource_{resource_index}_quantity'
+
+                if resource_id_key not in request.POST:
+                    break
+
+                resource_id = request.POST.get(resource_id_key)
+                resource_qty = request.POST.get(resource_qty_key)
+
+                if resource_id and resource_qty:
+                    resources.append({
+                        'resource_id': int(resource_id),
+                        'quantity': float(resource_qty)
+                    })
+
+                resource_index += 1
+
+            # Construir datos para el API
+            data = {
+                'category_id': category_id,
+                'configuration': {
+                    'id': config_id,
+                    'name': config_name,
+                    'description': config_description,
+                    'resources': resources
+                }
+            }
+
+            response = requests.post(
+                f'{BACKEND_URL}/api/crearConfiguracion',
+                json=data,
+                headers={'Content-Type': 'application/json'}
+            )
+
+            if response.status_code == 201:
+                result = response.json()
+                return render(request, 'result.html', {
+                    'success': True,
+                    'message': result.get('message', 'Configuración creada exitosamente')
+                })
+            else:
+                # Recargar categorías y recursos
+                categories_response = requests.get(f'{BACKEND_URL}/consultar')
+                categories = []
+                resources_list = []
+
+                if categories_response.status_code == 200:
+                    data_reload = categories_response.json()
+                    categories = data_reload.get(
+                        'data', {}).get('categories', [])
+                    resources_list = data_reload.get(
+                        'data', {}).get('resources', [])
+
+                return render(request, 'create_configuration.html', {
+                    'error': response.json().get('error', 'Error al crear configuración'),
+                    'categories': categories,
+                    'resources': resources_list
+                })
+        except Exception as e:
+            # Recargar categorías y recursos en caso de error
+            try:
+                categories_response = requests.get(f'{BACKEND_URL}/consultar')
+                categories = []
+                resources_list = []
+
+                if categories_response.status_code == 200:
+                    data_reload = categories_response.json()
+                    categories = data_reload.get(
+                        'data', {}).get('categories', [])
+                    resources_list = data_reload.get(
+                        'data', {}).get('resources', [])
+
+                return render(request, 'create_configuration.html', {
+                    'error': str(e),
+                    'categories': categories,
+                    'resources': resources_list
+                })
+            except:
+                return render(request, 'create_configuration.html', {
+                    'error': str(e),
+                    'categories': [],
+                    'resources': []
+                })
+
+
 def create_client(request):
     """Crear un nuevo cliente"""
     if request.method == 'POST':
@@ -440,3 +562,119 @@ def pending_consumptions(request):
             'success': False,
             'error': str(e)
         })
+
+
+def report_invoice(request):
+    """Seleccionar factura y generar reporte PDF"""
+    if request.method == 'GET':
+        # Obtener lista de facturas
+        try:
+            response = requests.get(f'{BACKEND_URL}/facturas')
+            if response.status_code == 200:
+                data = response.json()
+                return render(request, 'report_invoice.html', {
+                    'invoices': data.get('invoices', [])
+                })
+            else:
+                return render(request, 'report_invoice.html', {
+                    'error': 'Error al cargar facturas',
+                    'invoices': []
+                })
+        except Exception as e:
+            return render(request, 'report_invoice.html', {
+                'error': str(e),
+                'invoices': []
+            })
+
+    elif request.method == 'POST':
+        # Descargar PDF de factura seleccionada
+        invoice_id = request.POST.get('invoice_id')
+        if not invoice_id:
+            return render(request, 'report_invoice.html', {
+                'error': 'Seleccione una factura',
+                'invoices': []
+            })
+
+        try:
+            from django.http import HttpResponse
+            response = requests.get(
+                f'{BACKEND_URL}/reporte/factura/{invoice_id}', timeout=10)
+
+            if response.status_code == 200:
+                # Retornar PDF
+                pdf_response = HttpResponse(
+                    response.content, content_type='application/pdf')
+                pdf_response[
+                    'Content-Disposition'] = f'attachment; filename="factura_{invoice_id}.pdf"'
+                return pdf_response
+            else:
+                # Recargar pagina con error
+                invoices_response = requests.get(f'{BACKEND_URL}/facturas')
+                invoices = invoices_response.json().get(
+                    'invoices', []) if invoices_response.status_code == 200 else []
+                return render(request, 'report_invoice.html', {
+                    'error': 'Error al generar reporte PDF',
+                    'invoices': invoices
+                })
+        except Exception as e:
+            invoices_response = requests.get(f'{BACKEND_URL}/facturas')
+            invoices = invoices_response.json().get(
+                'invoices', []) if invoices_response.status_code == 200 else []
+            return render(request, 'report_invoice.html', {
+                'error': str(e),
+                'invoices': invoices
+            })
+
+
+def report_sales(request):
+    """Generar reporte de analisis de ventas"""
+    if request.method == 'GET':
+        return render(request, 'report_sales.html')
+
+    elif request.method == 'POST':
+        analysis_type = request.POST.get('type', 'categories')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+
+        if not start_date or not end_date:
+            return render(request, 'report_sales.html', {
+                'error': 'Ingrese ambas fechas'
+            })
+
+        try:
+            from django.http import HttpResponse
+            response = requests.post(
+                f'{BACKEND_URL}/reporte/ventas',
+                json={
+                    'type': analysis_type,
+                    'start_date': start_date,
+                    'end_date': end_date
+                },
+                timeout=30
+            )
+
+            if response.status_code == 200:
+                # Retornar PDF
+                pdf_response = HttpResponse(
+                    response.content, content_type='application/pdf')
+                pdf_response[
+                    'Content-Disposition'] = f'attachment; filename="analisis_ventas_{analysis_type}.pdf"'
+                return pdf_response
+            else:
+                return render(request, 'report_sales.html', {
+                    'error': 'Error al generar reporte de ventas'
+                })
+        except Exception as e:
+            return render(request, 'report_sales.html', {
+                'error': str(e)
+            })
+
+
+def help_page(request):
+    """Pagina de ayuda con informacion del estudiante"""
+    return render(request, 'help.html')
+
+
+def documentation_page(request):
+    """Pagina de documentacion del sistema"""
+    return render(request, 'documentation.html')

@@ -10,11 +10,23 @@
     <nav class="bg-slate-800 border-b border-slate-700 shadow-lg">
       <div class="container mx-auto px-6 py-4">
         <div class="flex items-center space-x-3">
-          <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
+          <svg
+            class="w-8 h-8 text-blue-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+            ></path>
           </svg>
           <div>
-            <h1 class="text-xl font-bold text-white">Tecnologías Chapinas S.A.</h1>
+            <h1 class="text-xl font-bold text-white">
+              Tecnologías Chapinas S.A.
+            </h1>
             <p class="text-sm text-slate-400">Resultado de Operación</p>
           </div>
         </div>
@@ -23,20 +35,45 @@
 
     <div class="container mx-auto px-6 py-8">
       <div class="max-w-3xl mx-auto">
-        <a href="/" class="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6 transition-colors">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        <a
+          href="/"
+          class="inline-flex items-center text-blue-400 hover:text-blue-300 mb-6 transition-colors"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            ></path>
           </svg>
           Regresar al inicio
         </a>
 
         <!-- Success Result -->
         {% if success %}
-        <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6">
+        <div
+          class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6"
+        >
           <div class="flex items-center mb-4">
             <div class="bg-green-500/10 rounded-lg p-3 mr-4">
-              <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              <svg
+                class="w-8 h-8 text-green-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
               </svg>
             </div>
             <div>
@@ -57,42 +94,54 @@
             </h3>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
               {% if data.counts.resources %}
-              <div class="bg-blue-500/10 rounded-lg p-3 text-center border border-blue-500/20">
+              <div
+                class="bg-blue-500/10 rounded-lg p-3 text-center border border-blue-500/20"
+              >
                 <div class="text-2xl font-bold text-blue-400">
                   {{ data.counts.resources }}
                 </div>
                 <div class="text-xs text-slate-400">Recursos</div>
               </div>
               {% endif %} {% if data.counts.categories %}
-              <div class="bg-green-500/10 rounded-lg p-3 text-center border border-green-500/20">
+              <div
+                class="bg-green-500/10 rounded-lg p-3 text-center border border-green-500/20"
+              >
                 <div class="text-2xl font-bold text-green-400">
                   {{ data.counts.categories }}
                 </div>
                 <div class="text-xs text-slate-400">Categorías</div>
               </div>
               {% endif %} {% if data.counts.configurations %}
-              <div class="bg-purple-500/10 rounded-lg p-3 text-center border border-purple-500/20">
+              <div
+                class="bg-purple-500/10 rounded-lg p-3 text-center border border-purple-500/20"
+              >
                 <div class="text-2xl font-bold text-purple-400">
                   {{ data.counts.configurations }}
                 </div>
                 <div class="text-xs text-slate-400">Configuraciones</div>
               </div>
               {% endif %} {% if data.counts.clients %}
-              <div class="bg-yellow-500/10 rounded-lg p-3 text-center border border-yellow-500/20">
+              <div
+                class="bg-yellow-500/10 rounded-lg p-3 text-center border border-yellow-500/20"
+              >
                 <div class="text-2xl font-bold text-yellow-400">
                   {{ data.counts.clients }}
                 </div>
                 <div class="text-xs text-slate-400">Clientes</div>
               </div>
               {% endif %} {% if data.counts.instances %}
-              <div class="bg-red-500/10 rounded-lg p-3 text-center border border-red-500/20">
+              <div
+                class="bg-red-500/10 rounded-lg p-3 text-center border border-red-500/20"
+              >
                 <div class="text-2xl font-bold text-red-400">
                   {{ data.counts.instances }}
                 </div>
                 <div class="text-xs text-slate-400">Instancias</div>
               </div>
               {% endif %} {% if data.count %}
-              <div class="bg-indigo-500/10 rounded-lg p-3 text-center border border-indigo-500/20">
+              <div
+                class="bg-indigo-500/10 rounded-lg p-3 text-center border border-indigo-500/20"
+              >
                 <div class="text-2xl font-bold text-indigo-400">
                   {{ data.count }}
                 </div>
@@ -106,11 +155,23 @@
 
         <!-- Error Result -->
         {% else %}
-        <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6">
+        <div
+          class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl p-6"
+        >
           <div class="flex items-center mb-4">
             <div class="bg-red-500/10 rounded-lg p-3 mr-4">
-              <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              <svg
+                class="w-8 h-8 text-red-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
               </svg>
             </div>
             <div>
@@ -128,7 +189,9 @@
             <h3 class="text-sm font-semibold text-slate-300 mb-2">
               Posibles soluciones:
             </h3>
-            <ul class="list-disc list-inside text-sm text-slate-400 space-y-1 ml-4">
+            <ul
+              class="list-disc list-inside text-sm text-slate-400 space-y-1 ml-4"
+            >
               <li>Verifique que el archivo XML tenga el formato correcto</li>
               <li>Asegúrese de que el backend esté en ejecución</li>
               <li>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Análisis de Ventas - Tecnologías Chapinas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-900 text-slate-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+      <!-- Header -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-4">
+            <a
+              href="{% url 'index' %}"
+              class="text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              <svg
+                class="w-8 h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+            </a>
+            <h1 class="text-3xl font-bold text-slate-100">
+              Análisis de Ventas
+            </h1>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg
+              class="w-8 h-8 text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              />
+            </svg>
+          </div>
+        </div>
+        <p class="text-slate-400">
+          Genere reportes PDF de análisis de ingresos por
+          categorías/configuraciones o recursos
+        </p>
+      </div>
+
+      <!-- Error Message -->
+      {% if error %}
+      <div
+        class="mb-6 bg-red-900/50 border border-red-700 rounded-lg p-4 flex items-start space-x-3"
+      >
+        <svg
+          class="w-6 h-6 text-red-400 flex-shrink-0 mt-0.5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <div>
+          <h3 class="font-semibold text-red-300">Error</h3>
+          <p class="text-red-200">{{ error }}</p>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Form Card -->
+      <div
+        class="bg-slate-800 rounded-lg shadow-xl border border-slate-700 p-6"
+      >
+        <form method="POST" action="{% url 'report_sales' %}">
+          {% csrf_token %}
+
+          <!-- Analysis Type -->
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-slate-300 mb-3">
+              Tipo de Análisis
+            </label>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Categories Option -->
+              <label
+                class="flex items-center space-x-3 p-4 bg-slate-700 border-2 border-slate-600 rounded-lg cursor-pointer hover:border-blue-500 transition-colors"
+              >
+                <input
+                  type="radio"
+                  name="type"
+                  value="categories"
+                  checked
+                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <div>
+                  <p class="font-medium text-slate-100">
+                    Categorías/Configuraciones
+                  </p>
+                  <p class="text-sm text-slate-400">
+                    Analiza ingresos por categoría y configuración
+                  </p>
+                </div>
+              </label>
+
+              <!-- Resources Option -->
+              <label
+                class="flex items-center space-x-3 p-4 bg-slate-700 border-2 border-slate-600 rounded-lg cursor-pointer hover:border-blue-500 transition-colors"
+              >
+                <input
+                  type="radio"
+                  name="type"
+                  value="resources"
+                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <div>
+                  <p class="font-medium text-slate-100">Recursos</p>
+                  <p class="text-sm text-slate-400">
+                    Analiza ingresos por tipo de recurso
+                  </p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Date Range -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label
+                for="start_date"
+                class="block text-sm font-medium text-slate-300 mb-2"
+              >
+                Fecha Inicio
+              </label>
+              <input
+                type="text"
+                id="start_date"
+                name="start_date"
+                placeholder="dd/mm/yyyy"
+                required
+                class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <p class="mt-2 text-sm text-slate-400">Formato: DD/MM/AAAA</p>
+            </div>
+
+            <div>
+              <label
+                for="end_date"
+                class="block text-sm font-medium text-slate-300 mb-2"
+              >
+                Fecha Fin
+              </label>
+              <input
+                type="text"
+                id="end_date"
+                name="end_date"
+                placeholder="dd/mm/yyyy"
+                required
+                class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <p class="mt-2 text-sm text-slate-400">Formato: DD/MM/AAAA</p>
+            </div>
+          </div>
+
+          <!-- Info Boxes -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <!-- Categories Info -->
+            <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+              <div class="flex items-start space-x-3">
+                <svg
+                  class="w-6 h-6 text-blue-400 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                  />
+                </svg>
+                <div>
+                  <h4 class="font-semibold text-blue-300 mb-1">
+                    Análisis por Categorías
+                  </h4>
+                  <p class="text-sm text-blue-200">
+                    Identifica qué categorías y configuraciones generan más
+                    ingresos
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Resources Info -->
+            <div class="bg-green-900/30 border border-green-700 rounded-lg p-4">
+              <div class="flex items-start space-x-3">
+                <svg
+                  class="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                  />
+                </svg>
+                <div>
+                  <h4 class="font-semibold text-green-300 mb-1">
+                    Análisis por Recursos
+                  </h4>
+                  <p class="text-sm text-green-200">
+                    Identifica qué recursos (RAM, CPU, etc.) son más rentables
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex items-center space-x-4">
+            <button
+              type="submit"
+              class="flex items-center space-x-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              <span>Generar PDF</span>
+            </button>
+
+            <a
+              href="{% url 'index' %}"
+              class="flex items-center space-x-2 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-slate-100 rounded-lg transition-colors font-medium"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+              <span>Cancelar</span>
+            </a>
+          </div>
+        </form>
+      </div>
+
+      <!-- Example Info -->
+      <div
+        class="mt-8 bg-slate-800 rounded-lg shadow-xl border border-slate-700 p-6"
+      >
+        <div class="flex items-start space-x-3">
+          <svg
+            class="w-6 h-6 text-yellow-400 flex-shrink-0 mt-0.5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <div>
+            <h4 class="font-semibold text-yellow-300 mb-2">Ejemplo de Uso</h4>
+            <ul class="text-sm text-slate-300 space-y-1">
+              <li>
+                • Fecha Inicio:
+                <span class="text-yellow-400 font-mono">01/01/2025</span>
+              </li>
+              <li>
+                • Fecha Fin:
+                <span class="text-yellow-400 font-mono">31/01/2025</span>
+              </li>
+              <li>
+                • El reporte mostrará los ingresos totales y el porcentaje de
+                contribución de cada elemento
+              </li>
+              <li>• Los elementos se ordenarán de mayor a menor ingreso</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

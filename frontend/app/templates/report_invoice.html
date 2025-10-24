@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reporte de Factura - Tecnologías Chapinas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-900 text-slate-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+      <!-- Header -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-4">
+            <a
+              href="{% url 'index' %}"
+              class="text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              <svg
+                class="w-8 h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+            </a>
+            <h1 class="text-3xl font-bold text-slate-100">
+              Reporte de Factura
+            </h1>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg
+              class="w-8 h-8 text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+        </div>
+        <p class="text-slate-400">
+          Genere un reporte PDF detallado de una factura específica
+        </p>
+      </div>
+
+      <!-- Error Message -->
+      {% if error %}
+      <div
+        class="mb-6 bg-red-900/50 border border-red-700 rounded-lg p-4 flex items-start space-x-3"
+      >
+        <svg
+          class="w-6 h-6 text-red-400 flex-shrink-0 mt-0.5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <div>
+          <h3 class="font-semibold text-red-300">Error</h3>
+          <p class="text-red-200">{{ error }}</p>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Form Card -->
+      <div
+        class="bg-slate-800 rounded-lg shadow-xl border border-slate-700 p-6"
+      >
+        <form method="POST" action="{% url 'report_invoice' %}">
+          {% csrf_token %}
+
+          <div class="mb-6">
+            <label
+              for="invoice_id"
+              class="block text-sm font-medium text-slate-300 mb-2"
+            >
+              Seleccione una Factura
+            </label>
+            <select
+              id="invoice_id"
+              name="invoice_id"
+              required
+              class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">-- Seleccione una factura --</option>
+              {% for invoice in invoices %}
+              <option value="{{ invoice.id }}">
+                {{ invoice.id }} - {{ invoice.nit }} - ${{ invoice.total }} ({{
+                invoice.date }})
+              </option>
+              {% endfor %}
+            </select>
+            <p class="mt-2 text-sm text-slate-400">
+              El reporte incluirá el detalle completo de recursos, instancias y
+              montos
+            </p>
+          </div>
+
+          <!-- Info Box -->
+          <div
+            class="mb-6 bg-blue-900/30 border border-blue-700 rounded-lg p-4"
+          >
+            <div class="flex items-start space-x-3">
+              <svg
+                class="w-6 h-6 text-blue-400 flex-shrink-0 mt-0.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <div>
+                <h4 class="font-semibold text-blue-300 mb-1">
+                  Información del Reporte
+                </h4>
+                <ul class="text-sm text-blue-200 space-y-1">
+                  <li>• Datos completos del cliente</li>
+                  <li>• Desglose por instancia y recurso</li>
+                  <li>• Cálculo detallado de costos</li>
+                  <li>• Total a pagar</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex items-center space-x-4">
+            <button
+              type="submit"
+              class="flex items-center space-x-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              <span>Generar PDF</span>
+            </button>
+
+            <a
+              href="{% url 'index' %}"
+              class="flex items-center space-x-2 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-slate-100 rounded-lg transition-colors font-medium"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+              <span>Cancelar</span>
+            </a>
+          </div>
+        </form>
+      </div>
+
+      <!-- Invoices List -->
+      {% if invoices %}
+      <div
+        class="mt-8 bg-slate-800 rounded-lg shadow-xl border border-slate-700 p-6"
+      >
+        <h2 class="text-xl font-semibold text-slate-100 mb-4">
+          Facturas Disponibles
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-slate-700">
+                <th class="text-left py-3 px-4 text-slate-300 font-medium">
+                  No. Factura
+                </th>
+                <th class="text-left py-3 px-4 text-slate-300 font-medium">
+                  NIT Cliente
+                </th>
+                <th class="text-left py-3 px-4 text-slate-300 font-medium">
+                  Fecha
+                </th>
+                <th class="text-right py-3 px-4 text-slate-300 font-medium">
+                  Total
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for invoice in invoices %}
+              <tr
+                class="border-b border-slate-700 hover:bg-slate-700/50 transition-colors"
+              >
+                <td class="py-3 px-4 text-slate-100 font-mono">
+                  {{ invoice.id }}
+                </td>
+                <td class="py-3 px-4 text-slate-200">{{ invoice.nit }}</td>
+                <td class="py-3 px-4 text-slate-200">{{ invoice.date }}</td>
+                <td class="py-3 px-4 text-right text-green-400 font-semibold">
+                  ${{ invoice.total }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>
