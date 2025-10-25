@@ -154,8 +154,10 @@ def student_info(request):
 def billing(request):
     """Página de facturación con selector de rango de fechas"""
     if request.method == 'POST':
-        start_date = request.POST.get('start_date')
-        end_date = request.POST.get('end_date')
+        start_date = request.POST.get('start_date', '')
+        end_date = request.POST.get('end_date', '')
+
+        print(f"DEBUG - Fechas recibidas: start={start_date}, end={end_date}")
 
         if not start_date or not end_date:
             return render(request, 'billing.html', {
@@ -174,8 +176,11 @@ def billing(request):
                 invoices = data.get('invoices', [])
 
                 # Calcular total de todas las facturas
-                total_amount = sum(inv.get('total_amount', 0)
+                total_amount = sum(float(inv.get('total_amount', 0))
                                    for inv in invoices)
+
+                print(
+                    f"DEBUG - Pasando al template: start={start_date}, end={end_date}, count={data.get('count', 0)}")
 
                 return render(request, 'billing_result.html', {
                     'success': True,
@@ -440,7 +445,7 @@ def create_instance(request):
             from datetime import datetime
             date_obj = datetime.strptime(start_date, '%Y-%m-%d')
             start_date_formatted = date_obj.strftime('%d/%m/%Y')
-            
+
             data = {
                 'client_nit': request.POST.get('client_nit'),
                 'id': int(request.POST.get('id')),
@@ -495,7 +500,7 @@ def cancel_instance_view(request):
             from datetime import datetime
             date_obj = datetime.strptime(end_date, '%Y-%m-%d')
             end_date_formatted = date_obj.strftime('%d/%m/%Y')
-            
+
             data = {
                 'client_nit': request.POST.get('client_nit'),
                 'instance_id': int(request.POST.get('instance_id')),
