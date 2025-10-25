@@ -216,5 +216,5 @@ Ver archivos de ejemplo en `backend/instance/data/`
 
 ## Autor
 
-Estudiante USAC - Carnet 202303204  
+Christian Javier Rivas Arreaga - Carnet 202303204  
 Proyecto IPC2 - 2024
