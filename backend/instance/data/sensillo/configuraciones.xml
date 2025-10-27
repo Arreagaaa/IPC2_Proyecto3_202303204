@@ -2,25 +2,39 @@
 <archivoConfiguraciones>
     <listaRecursos>
         <recurso id="1">
-            <nombre>Memoria de Acceso Aleatorio</nombre>
+            <nombre>Memoria de acceso aleatorio</nombre>
             <abreviatura>RAM</abreviatura>
             <metrica>Gb</metrica>
             <tipo>HARDWARE</tipo>
             <valorXhora>40</valorXhora>
         </recurso>
         <recurso id="2">
-            <nombre>Unidad Central de Procesamiento</nombre>
+            <nombre>Unidad central de procesamiento</nombre>
             <abreviatura>CPU</abreviatura>
             <metrica>Núcleos</metrica>
             <tipo>HARDWARE</tipo>
-            <valorXhora>50</valorXhora>
+            <valorXhora>55</valorXhora>
         </recurso>
         <recurso id="3">
-            <nombre>Disco Duro Sólido</nombre>
+            <nombre>Disco duro sólido</nombre>
             <abreviatura>SSD</abreviatura>
             <metrica>Gb</metrica>
             <tipo>HARDWARE</tipo>
-            <valorXhora>30</valorXhora>
+            <valorXhora>25</valorXhora>
+        </recurso>
+        <recurso id="4">
+            <nombre>Teclado</nombre>
+            <abreviatura>TCL</abreviatura>
+            <metrica>Unidad</metrica>
+            <tipo>HARDWARE</tipo>
+            <valorXhora>60</valorXhora>
+        </recurso>
+        <recurso id="5">
+            <nombre>Recurso 5</nombre>
+            <abreviatura>R5</abreviatura>
+            <metrica>Licencia</metrica>
+            <tipo>SOFTWARE</tipo>
+            <valorXhora>82.5</valorXhora>
         </recurso>
     </listaRecursos>
 
@@ -31,19 +45,19 @@
             <cargaTrabajo>Alta</cargaTrabajo>
             <listaConfiguraciones>
                 <configuracion id="1">
-                    <nombre>C1C1</nombre>
-                    <descripcion>Configuración alta</descripcion>
+                    <nombre>Cat1-Conf1</nombre>
+                    <descripcion>Configuración media</descripcion>
                     <recursosConfiguracion>
-                        <recurso id="1">16</recurso>
-                        <recurso id="2">8</recurso>
+                        <recurso id="1">25</recurso>
+                        <recurso id="3">5</recurso>
                     </recursosConfiguracion>
                 </configuracion>
                 <configuracion id="2">
-                    <nombre>C1C2</nombre>
+                    <nombre>Cat1-Conf2</nombre>
                     <descripcion>Configuración baja</descripcion>
                     <recursosConfiguracion>
-                        <recurso id="2">2</recurso>
-                        <recurso id="3">50</recurso>
+                        <recurso id="2">3</recurso>
+                        <recurso id="4">7</recurso>
                     </recursosConfiguracion>
                 </configuracion>
             </listaConfiguraciones>
@@ -51,25 +65,25 @@
     </listaCategorias>
 
     <listaClientes>
-        <cliente nit="32644-5">
-            <nombre>ipc</nombre>
-            <usuario>prueba</usuario>
-            <clave>proyecto</clave>
+        <cliente nit="2019160-K">
+            <nombre>Nombre</nombre>
+            <usuario>Usuario</usuario>
+            <clave>claveUsuario</clave>
             <direccion>Direccion del cliente</direccion>
             <correoElectronico>eMailCliente</correoElectronico>
             <listaInstancias>
                 <instancia id="1">
                     <idConfiguracion>1</idConfiguracion>
-                    <nombre>Instancia Uno</nombre>
-                    <fechaInicio>esta es una descripcion de la fecha 26/02/2009</fechaInicio>
-                    <estado>CANCELADA</estado>
+                    <nombre>Primera instancia</nombre>
+                    <fechaInicio>esta es una descripcion de la fecha 26/02/2003</fechaInicio>
+                    <estado>VIGENTE</estado>
                     <fechaFinal>27/06/2009</fechaFinal>
                 </instancia>
                 <instancia id="2">
                     <idConfiguracion>2</idConfiguracion>
-                    <nombre>Instancia Dos</nombre>
-                    <fechaInicio>26/02/2003 la fecha esta al inicio</fechaInicio>
-                    <estado>VIGENTE</estado>
+                    <nombre>Segunda instancia</nombre>
+                    <fechaInicio>esta es una descripcion de la fecha 26/02/2003</fechaInicio>
+                    <estado>CANCELADA</estado>
                     <fechaFinal>27/06/2009</fechaFinal>
                 </instancia>
             </listaInstancias>
